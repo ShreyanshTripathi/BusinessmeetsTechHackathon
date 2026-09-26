@@ -1,4 +1,6 @@
 const KEY = "shiftloop_api";
+/** Hosted backend used when nothing else is configured. */
+export const DEFAULT_API = "https://shiftloop.onrender.com";
 
 /**
  * DEMO MODE SWITCH — set to false (or delete src/mocks/) once the real
@@ -24,7 +26,7 @@ export function resolveApiBase(): string {
   } catch {
     /* ignore */
   }
-  const env = (import.meta.env['VITE_API_BASE_URL'] as string | undefined) ?? "";
+  const env = (import.meta.env['VITE_API_BASE_URL'] as string | undefined) || DEFAULT_API;
   return env.replace(/\/+$/, "");
 }
 
@@ -41,7 +43,7 @@ export function setApiBase(url: string | null) {
   } catch {
     /* ignore */
   }
-  base = v || ((import.meta.env['VITE_API_BASE_URL'] as string | undefined) ?? "").replace(/\/+$/, "");
+  base = v || ((import.meta.env['VITE_API_BASE_URL'] as string | undefined) || DEFAULT_API).replace(/\/+$/, "");
 }
 
 export function getWsUrl(): string {
