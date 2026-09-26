@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { api } from './api'
+import { wsUrl } from './config'
 import type { Snapshot } from './types'
 
 /** Live snapshot over WebSocket, with polling as a fallback when the socket is down. */
@@ -20,8 +21,7 @@ export function useSnapshot() {
     let closed = false
     let retry: ReturnType<typeof setTimeout>
     const connect = () => {
-      const proto = location.protocol === 'https:' ? 'wss' : 'ws'
-      const ws = new WebSocket(`${proto}://${location.host}/ws`)
+      const ws = new WebSocket(wsUrl())
       socket.current = ws
       ws.onopen = () => setConnected(true)
       ws.onmessage = (e) => {
