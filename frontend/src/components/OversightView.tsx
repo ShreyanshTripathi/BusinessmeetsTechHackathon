@@ -1,5 +1,6 @@
 import { agentLabel, clockTime } from '../format'
-import type { Oversight } from '../types'
+import type { ModelCard, Oversight } from '../types'
+import { modelName } from './ModelBox'
 import { Badge, Panel } from './ui'
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
@@ -14,7 +15,13 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
 
 const DECISION_TONE = { accept: 'green', modify: 'amber', dismiss: 'slate' } as const
 
-export default function OversightView({ data }: { data: Oversight }) {
+function headline(card: ModelCard): string {
+  const m = card.metrics
+  if (card.model === 'safety_model') return `accuracy ${m.accuracy} (was ${m.baseline_logreg_accuracy}), high-potential caught ${m.high_recall} (was ${m.baseline_logreg_high_recall})`
+  return `ROC AUC ${m.roc_auc} (replaced model ${m.baseline_logreg_roc_auc})`
+}
+
+export default function OversightView({ data, models = [] }: { data: Oversight; models?: ModelCard[] }) {
   return (
     <div className="grid min-h-0 gap-4 lg:grid-cols-[1fr_380px]">
       <div className="flex min-h-0 flex-col gap-4">
@@ -44,6 +51,20 @@ export default function OversightView({ data }: { data: Oversight }) {
         </Panel>
       </div>
       <div className="flex min-h-0 flex-col gap-4">
+        {models.length > 0 && (
+          <Panel title="Models">
+            <ul aria-label="Models" className="space-y-3 px-4 py-3 text-xs">
+              {models.map((c) => (
+                <li key={c.model}>
+                  <p className="font-semibold text-slate-200">{modelName(c.model)}</p>
+                  <p className="text-slate-400">{c.algorithm}</p>
+                  <p className="text-slate-300">{headline(c)}</p>
+                  <p className="text-slate-500">Limits: {c.limits}</p>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+        )}
         <Panel title="Works council view">
           <ul className="space-y-1.5 px-4 py-3 text-sm text-slate-200">
             <li>✓ No individual performance scoring</li>

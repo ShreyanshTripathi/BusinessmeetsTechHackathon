@@ -1,7 +1,7 @@
 """Wires everything together: simulator → bus → specialised agents → central intelligence."""
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 
 from . import actions
 from .agents.assembly import AssemblyAgent
@@ -10,19 +10,28 @@ from .agents.staffing import StaffingAgent
 from .bus import EventBus
 from .central.engine import CentralIntelligence
 from .central.recommend import next_break
-from .models import Decision
+from .ml_bridge import MLBridge
+from .models import Decision, Event, Severity
 from .simulator.shift import ShiftSimulator
 from .state import FactoryState
 
 REPAIR_MIN = 20
 MINUTE = timedelta(minutes=1)
 
+# A near-miss report filed during the demo shift, rated by the safety model
+DEMO_REPORTS = [(time(11, 10), "C", "S17",
+                 "While moving the lift assist to the next car the load swung and hit the station guard rail. "
+                 "The operator stepped back in time, nobody was hurt, but the guard is bent.")]
+
 
 class Plant:
-    def __init__(self, seed: int = 42, scenario: str = "demo") -> None:
+    def __init__(self, seed: int = 42, scenario: str = "demo", ml: bool = False) -> None:
         self.state = FactoryState.create(seed)
         self.bus = EventBus()
-        self.agents = [StaffingAgent(), AssemblyAgent(), SafetyAgent()]
+        self.ml = MLBridge.load() if ml else MLBridge()
+        forecaster = self.ml if self.ml.available else None
+        self.agents = [StaffingAgent(forecaster=forecaster), AssemblyAgent(forecaster=forecaster), SafetyAgent()]
+        self._reports = list(DEMO_REPORTS) if scenario == "demo" and self.ml.available else []
         self.central = CentralIntelligence()
         self.sim = ShiftSimulator(self.state, seed=seed, scenario=scenario)
         self.bus.subscribe("reading", self._on_reading)
@@ -47,6 +56,9 @@ class Plant:
 
     def step(self, minutes: int = 1) -> None:
         for _ in range(minutes):
+            while self._reports and self.state.now.time() >= self._reports[0][0]:
+                _, zone, station, text = self._reports.pop(0)
+                self.report_near_miss(text, zone, station)
             for reading in self.sim.generate():
                 self.bus.publish("reading", reading)
             for agent in self.agents:
@@ -116,6 +128,27 @@ class Plant:
         p = self.state.proposals[proposal_id]
         p.status = "rejected"
         return {"proposal": p.model_dump()}
+
+    def report_near_miss(self, text: str, zone: str, station: str | None = None) -> Event:
+        """A worker or team lead files a near-miss report; the safety model rates it."""
+        ml = self.ml.safety_triage(text, zone, station)
+        eid = self.state.next_id("evt")
+        event = Event(id=eid, agent="safety", time=self.state.now, zone=zone, station=station, type=ml["type"],
+                      severity=Severity(ml["severity"]), confidence=ml["confidence"],
+                      evidence=[f'Report: "{text}"', *ml["evidence"]], suggested_action=ml["suggested_action"],
+                      key=f"safety:report:{eid}", data=ml["data"])
+        self.state.signals += 1
+        self.bus.publish("events", [event])
+        return event
+
+    def explain_incident(self, incident_id: str, client, language: str = "en") -> list[dict]:
+        """Plain-language explanations of the model predictions behind an incident."""
+        out = []
+        for e in self.central.events_for(incident_id):
+            if e.data.get("model"):
+                res = self.ml.explain(e.id, e.model_dump(mode="json"), client, language)
+                out.append({"event_id": e.id, "model": e.data["model"], **res})
+        return out
 
     def all_clear(self) -> dict:
         return actions.all_clear(self.state)

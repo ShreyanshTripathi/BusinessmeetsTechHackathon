@@ -42,6 +42,40 @@ export interface Incident {
   likely_cause: string | null
   evidence: string[]
   recommendation: Recommendation | null
+  predictions: Prediction[]
+}
+
+export interface Driver {
+  feature?: string
+  word?: string
+  value?: string | number
+  typical?: string | number
+  effect: number
+}
+
+export interface Prediction {
+  event_id: string
+  model: string
+  risk: number
+  explanation: string
+  drivers: Driver[]
+}
+
+export interface Explanation {
+  event_id: string
+  model: string
+  text: string
+  mode: 'claude' | 'offline'
+}
+
+export interface ModelCard {
+  model: string
+  predicts: string
+  algorithm: string
+  data: string
+  metrics: Record<string, number | null>
+  limits: string
+  must_not_be_used_for: string
 }
 
 export interface Operator {

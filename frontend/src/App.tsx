@@ -4,6 +4,7 @@ import ChatPanel from './components/ChatPanel'
 import EmergencyView from './components/EmergencyView'
 import Escalations from './components/Escalations'
 import FloorMap from './components/FloorMap'
+import ForecastList from './components/ForecastList'
 import HandoverView from './components/HandoverView'
 import Notifications from './components/Notifications'
 import OversightView from './components/OversightView'
@@ -11,7 +12,7 @@ import PriorityInbox from './components/PriorityInbox'
 import SafetyView from './components/SafetyView'
 import StaffingBoard from './components/StaffingBoard'
 import TopBar from './components/TopBar'
-import type { Oversight, Snapshot, Worker } from './types'
+import type { ModelCard, Oversight, Snapshot, Worker } from './types'
 import { useSnapshot } from './useSnapshot'
 
 type Section = 'now' | 'line' | 'people' | 'safety' | 'alerts' | 'copilot' | 'oversight' | 'handover'
@@ -90,6 +91,12 @@ function Dashboard({ snapshot, refresh }: { snapshot: Snapshot; refresh: () => v
   const [selected, setSelected] = useState<string | null>(null)
   const workers = useLoader(() => api.workers(), section === 'people', [snapshot.clock])
   const oversight = useLoader<Oversight>(() => api.oversight(), section === 'oversight', [snapshot.clock, snapshot.attention.incidents])
+  const models = useLoader<{ models: ModelCard[] }>(() => api.models(), section === 'oversight', [])
+  const all = [...snapshot.incidents.active, ...snapshot.incidents.held, ...snapshot.incidents.in_progress]
+  const reports = all.filter((i) => i.predictions?.some((p) => p.model === 'safety_model'))
+  const explain = snapshot.mode === 'claude'
+    ? async (id: string) => (await api.explain(id)).explanations
+    : undefined
 
   const act = async <T,>(p: Promise<T>) => {
     const out = await p
@@ -113,13 +120,18 @@ function Dashboard({ snapshot, refresh }: { snapshot: Snapshot; refresh: () => v
     content = em ? (
       <EmergencyView emergency={em} zones={snapshot.zones} onCheckin={(id) => act(api.checkin(id))} onAllClear={() => act(api.allClear())} />
     ) : (
-      <PriorityInbox
-        active={snapshot.incidents.active}
-        held={snapshot.incidents.held}
-        inProgress={snapshot.incidents.in_progress}
-        attention={snapshot.attention}
-        onDecision={(id, d, reason, assignments) => act(api.decide(id, d, reason, assignments))}
-      />
+      <>
+        <PriorityInbox
+          active={snapshot.incidents.active}
+          held={snapshot.incidents.held}
+          inProgress={snapshot.incidents.in_progress}
+          attention={snapshot.attention}
+          onDecision={(id, d, reason, assignments) => act(api.decide(id, d, reason, assignments))}
+          onExplain={explain}
+        />
+        <ForecastList incidents={snapshot.incidents.held}
+          onDecision={(id, d, reason, assignments) => act(api.decide(id, d, reason, assignments))} />
+      </>
     )
   } else if (section === 'line') {
     content = <FloorMap zones={snapshot.zones} stations={snapshot.stations} emergencyZone={em?.zone ?? null} selected={selected} onSelect={setSelected} />
@@ -128,7 +140,10 @@ function Dashboard({ snapshot, refresh }: { snapshot: Snapshot; refresh: () => v
       ? <StaffingBoard stations={snapshot.stations} zones={snapshot.zones} workers={workers.workers as Worker[]} onWhatIf={api.whatIf} />
       : <p className="text-sm text-slate-400">Loading…</p>
   } else if (section === 'safety') {
-    content = <SafetyView zones={snapshot.zones} emergencyZone={em?.zone ?? null} />
+    content = (
+      <SafetyView zones={snapshot.zones} emergencyZone={em?.zone ?? null} reports={reports}
+        onReport={async (text, zone, station) => (await act(api.reportNearMiss(text, zone, station))).incident} />
+    )
   } else if (section === 'alerts') {
     content = (
       <div className="flex flex-col gap-6">
@@ -139,7 +154,7 @@ function Dashboard({ snapshot, refresh }: { snapshot: Snapshot; refresh: () => v
   } else if (section === 'copilot') {
     content = <div className="h-[calc(100vh-14rem)]">{chat}</div>
   } else if (section === 'oversight') {
-    content = oversight ? <OversightView data={oversight} /> : <p className="text-sm text-slate-400">Loading…</p>
+    content = oversight ? <OversightView data={oversight} models={models?.models ?? []} /> : <p className="text-sm text-slate-400">Loading…</p>
   } else {
     content = <div className="h-[calc(100vh-14rem)]"><HandoverView onGenerate={api.handover} /></div>
   }

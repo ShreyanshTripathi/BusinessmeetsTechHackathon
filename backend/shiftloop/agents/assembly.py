@@ -16,13 +16,17 @@ DRIFT_RATIO = 2.0  # rolling spread vs baseline that signals tool wear
 FAILURE_RATIO = 4.0  # spread at which the tool is expected to fail
 DEFECT_WINDOW = timedelta(minutes=30)
 UNSURE_CONFIDENCE = 0.5
+FORECAST_EVERY = timedelta(minutes=30)
 
 
 class AssemblyAgent(BaseAgent):
     name = "assembly"
 
-    def __init__(self) -> None:
+    def __init__(self, forecaster=None) -> None:
         super().__init__()
+        self.forecaster = forecaster  # ml_bridge.MLBridge: random-forest output-target forecast per zone
+        self._forecast: list[dict] = []
+        self._forecast_at = None
         self.cycles: dict[str, deque] = defaultdict(lambda: deque(maxlen=60))
         self.torque: dict[str, list[float]] = defaultdict(list)
         self.torque_spread: dict[str, deque] = defaultdict(lambda: deque(maxlen=20))  # (minute, spread)
@@ -39,7 +43,14 @@ class AssemblyAgent(BaseAgent):
         return []
 
     def tick(self, state: FactoryState) -> list[Event]:
-        return self._sync(state, self._defect_conditions(state), scope="defects:")
+        out = self._sync(state, self._defect_conditions(state), scope="defects:")
+        if self.forecaster is not None:
+            if self._forecast_at is None or state.now - self._forecast_at >= FORECAST_EVERY:
+                self._forecast = self.forecaster.assembly_forecast(state)
+                self._forecast_at = state.now
+            conds = [self.forecast_condition(state, ml, key=f"forecast:{ml['zone']}") for ml in self._forecast]
+            out += self._sync(state, conds, scope="forecast:")
+        return out
 
     # ------------------------------------------------------------------ station readings
 

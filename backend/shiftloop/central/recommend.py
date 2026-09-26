@@ -147,6 +147,19 @@ class Builder:
             self.send_maintenance(zone, f"make {target} safe")
             return self.rec("stop", target, f"Safety stop at {target}", scope=scope, hard_rule="safety_stop")
 
+        # Near-miss report rated by the safety model: learn from it, no blame
+        if "near_miss_rated" in t or "near_miss_unsure" in t:
+            e = t.get("near_miss_rated") or t["near_miss_unsure"]
+            where = station or f"zone {zone}"
+            if e.type == "near_miss_unsure":
+                self.steps.append("Safety expert rates the report (the model is unsure)")
+            self.steps.append(f"Engineer reviews the method at {where} with the team: fix the process, no blame")
+            self.steps.append("Check whether the same risk exists at similar stations")
+            self._escalate("EHS")
+            self._escalate("engineering")
+            return self.rec("keep_running", station or zone, f"Learn from the near miss at {where}",
+                            scope="station" if station else "zone")
+
         # 3. Safety warnings needing action but not a stop
         if "possible_fire" in t or "battery_overheating" in t:
             wardens = state.fire_wardens(zone)
@@ -237,6 +250,16 @@ class Builder:
                 self.cover(station, f"take over {station}", t["untrained_at_station"].data.get("candidates", []))
             return self.rec("keep_running", station, f"Support the trainee at {station}")
 
+        if "cover_risk" in t:
+            cand = _pick(state, [], cover_candidates(state, station), self.taken)
+            if cand:
+                self.assign(cand, f"stand by as qualified backup for {station}", to_station=station, kind="task")
+                self.steps.append(f"Line up {cand['name']} as backup for {station}: {cand.get('reason', '')}")
+            else:
+                self.steps.append(f"No free qualified backup for {station}: plan cross-training this week")
+            self.steps.append(t["cover_risk"].evidence[0])
+            return self.rec("keep_running", station, f"Prepare cover for {station} before a gap opens")
+
         if "part_shortage" in t:
             p = t["part_shortage"]
             self.steps.append(f"Call logistics: {p.evidence[0]}")
@@ -249,6 +272,12 @@ class Builder:
         if "slowdown" in t:
             self.steps.append(f"Walk to {station}: {t['slowdown'].evidence[0]}")
             return self.rec("keep_running", station, f"Find why {station} is slow")
+
+        if "output_target_risk" in t:
+            e = t["output_target_risk"]
+            self.steps.extend(e.evidence[:2])
+            self.steps.append(f"Check staffing and buffer in zone {zone} before the next break")
+            return self.rec("keep_running", zone, f"Protect zone {zone}'s output target", scope="zone")
 
         # 6. Staffing-only
         if "fire_warden_gap" in t:

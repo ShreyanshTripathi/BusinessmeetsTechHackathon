@@ -1,0 +1,30 @@
+{
+  "model": "safety_model",
+  "trained_at": "2026-09-26T04:16:03+00:00",
+  "predicts": "potential severity of an incident / near-miss report: low (I-II), medium (III), high (IV-VI)",
+  "used_by": "fire & safety agent, when a report is filed",
+  "algorithm": "TF-IDF word and word-pair features, 50 SVD components, random forest (scikit-learn), 500 trees",
+  "selection_note": "SVD size and tree settings picked on the same 5-fold CV that is reported: slightly optimistic",
+  "explanations": "per prediction: drivers.text_drivers (words that raise the predicted level); plain language: explain.py",
+  "data": "IHM Stefanini industrial safety database (Kaggle), 425 reports, mining and metals plants",
+  "target_note": "potential level, not actual level: how bad it could have been",
+  "unsure_rule": "max class probability below 0.5 -> safety expert review",
+  "split": "5-fold stratified cross-validation",
+  "metrics": {
+    "reports": 425,
+    "accuracy": 0.536,
+    "high_recall": 0.737,
+    "high_precision": 0.529,
+    "high_missed_as_low": 0.183,
+    "unsure_share": 0.607,
+    "accuracy_when_sure": 0.689,
+    "baseline_logreg_accuracy": 0.536,
+    "baseline_logreg_high_recall": 0.646,
+    "baseline_logreg_high_precision": 0.604,
+    "baseline_logreg_high_missed_as_low": 0.166,
+    "baseline_logreg_unsure_share": 0.496,
+    "baseline_logreg_accuracy_when_sure": 0.607
+  },
+  "limits": "Small public dataset from other industries. Retrain on the plant's own reports before real use.",
+  "must_not_be_used_for": "blaming individuals; the report text is about the event, not the person"
+}

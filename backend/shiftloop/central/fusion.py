@@ -7,11 +7,13 @@ from ..models import Event, Incident
 
 SAFETY_ZONE_WINDOW = timedelta(minutes=30)
 
-SAFETY_TYPES = {"fire_confirmed", "possible_fire", "battery_overheating", "gas_alarm", "high_heat",
-                "exit_blocked", "ppe_missing"}
+LIVE_SAFETY_TYPES = {"fire_confirmed", "possible_fire", "battery_overheating", "gas_alarm", "high_heat",
+                     "exit_blocked", "ppe_missing"}
+REPORT_TYPES = {"near_miss_rated", "near_miss_unsure"}  # something that already happened, rated by the safety model
+SAFETY_TYPES = LIVE_SAFETY_TYPES | REPORT_TYPES
 QUALITY_TYPES = {"defect_pattern", "inspection_unsure"}
 STAFFING_TYPES = {"station_uncovered", "untrained_at_station", "fire_warden_gap", "first_aider_gap",
-                  "working_time_limit", "qualification_expiring"}
+                  "working_time_limit", "qualification_expiring", "cover_risk"}
 
 CATEGORY_ORDER = ["safety", "quality", "production", "staffing"]
 
@@ -35,9 +37,12 @@ def belongs_to(event: Event, incident: Incident, events: list[Event]) -> bool:
     """Should `event` join `incident` (whose active events are `events`)?"""
     if event.key in incident.event_keys:
         return True
+    if event.type in REPORT_TYPES:
+        return False  # each report is its own case
     age = event.time - incident.updated
     if category_of(event) == "safety":
-        return (incident.category == "safety" and incident.zone == event.zone and age <= SAFETY_ZONE_WINDOW)
+        return (incident.category == "safety" and incident.zone == event.zone and age <= SAFETY_ZONE_WINDOW
+                and not any(k.startswith("safety:report:") for k in incident.event_keys))
     # a live incident means its conditions are still ongoing, so new findings at the station are connected
     if event.station and event.station in incident.stations:
         return incident.category != "safety"
@@ -85,6 +90,10 @@ TITLES = {
     "first_aider_gap": "No first aider in zone {zone}",
     "working_time_limit": "Working-time limit approaching",
     "qualification_expiring": "Qualification expiring at {station}",
+    "cover_risk": "{station} may lose qualified cover this shift",
+    "output_target_risk": "Zone {zone} may miss its output target",
+    "near_miss_rated": "Near-miss report at {station}",
+    "near_miss_unsure": "Near-miss report needs an expert rating at {station}",
 }
 
 

@@ -1,0 +1,6 @@
+pandas==2.2.2
+scikit-learn==1.7.0
+joblib==1.4.2
+numpy==1.26.4
+anthropic>=0.60
+pytest>=8

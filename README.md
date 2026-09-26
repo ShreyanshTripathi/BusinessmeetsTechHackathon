@@ -40,6 +40,21 @@ template handover; everything else works the same.
 | `SHIFTLOOP_SUMMARY_MODEL` | `claude-haiku-4-5` | shift handover |
 | `SHIFTLOOP_OFFLINE=1` | unset | force offline mode |
 
+### ML models (random forests)
+
+The backend loads the three random forests from `ml/models/` at startup (see [ml/README.md](ml/README.md)):
+
+| Agent | What the forest adds | When |
+|---|---|---|
+| Staffing | Which staffed stations may lose qualified cover this shift | shift start, then hourly |
+| Assembly | Which zones may miss today's output target | every 30 min |
+| Fire & Safety | How serious a reported near miss could have been (Safety page form; one scripted report at 11:10) | on report |
+
+Each prediction carries its drivers and a plain-language explanation. Forecasts reach the inbox only at 80%+
+risk; lower ones appear under **Model forecasts** on the Now page. With Claude available, incident cards get an
+**Explain with Claude** button. `/api/health` shows whether the models loaded; if they are missing, the agents
+run rules-only. `SHIFTLOOP_ML=0` turns the models off; `SHIFTLOOP_ML_DIR` points to another `ml/` folder.
+
 ### Vision models
 
 Camera frames can be posted to `POST /api/vision/{camera_id}` (multipart `image`). Each camera purpose has a
@@ -52,6 +67,22 @@ detector slot; empty slots return 503 and the simulator's scripted detections ar
 | `SHIFTLOOP_PPE_MODEL=weights.pt` | PPE cameras `CAM-PPE-x` | YOLO weights with `no-helmet`/`no-vest` style classes |
 
 Detections under 50% confidence become *expert review* items instead of defects.
+
+## Deploy on Render (Docker)
+
+One container serves the API, the WebSocket and the built dashboard (`Dockerfile` at the repo root).
+
+1. Push the repository to GitHub or GitLab. The trained models in `ml/models/` must be committed; the image copies them.
+2. In Render: **New → Blueprint** and pick the repository. `render.yaml` creates a Docker web service with a
+   health check on `/api/health`. (Or **New → Web Service**, runtime **Docker**, leave the Dockerfile path as is.)
+3. Optional: set `ANTHROPIC_API_KEY` in the service's environment for the Claude copilot and explanations.
+4. Open the service URL. The demo shift starts at 06:00.
+
+Things to know:
+- **One instance only.** The factory state lives in memory; don't scale out, and each deploy or restart starts the shift again.
+- **Free plan sleeps** after 15 minutes without traffic and restarts the shift on the next visit (first load takes
+  ~30–60 s). Use a paid plan for a live demo. The app uses about 160 MB of memory.
+- Build and run locally with Docker: `docker build -t shiftloop . && docker run -p 8000:8000 shiftloop`, then open http://localhost:8000.
 
 ## The demo shift
 

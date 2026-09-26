@@ -4,12 +4,17 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import json
+import os
+from pathlib import Path
 from typing import Literal
 
 from fastapi import FastAPI, File, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.responses import FileResponse
+from pydantic import BaseModel, Field, model_validator
+
+from ..factory import zone_of
 
 from ..llm.chat import ChatCopilot
 from ..llm.handover import write_handover
@@ -52,6 +57,24 @@ class CheckinIn(BaseModel):
     worker: str
 
 
+class ReportIn(BaseModel):
+    text: str = Field(min_length=3, max_length=2000)
+    zone: Literal["A", "B", "C", "D"]
+    station: str | None = None
+
+    @model_validator(mode="after")
+    def station_in_zone(self):
+        if self.station is not None:
+            valid = {f"S{i:02d}" for i in range(1, 25)}
+            if self.station not in valid or zone_of(self.station) != self.zone:
+                raise ValueError(f"station {self.station} is not in zone {self.zone}")
+        return self
+
+
+def ml_enabled() -> bool:
+    return os.getenv("SHIFTLOOP_ML", "1") != "0"
+
+
 class Runtime:
     """Holds the plant and everything that must be swapped together on reset."""
 
@@ -92,8 +115,8 @@ class Runtime:
 
 
 def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, detectors: dict | None = None,
-               autostart: bool = True, scenario: str = "demo") -> FastAPI:
-    plant = plant or Plant(scenario=scenario)
+               autostart: bool = True, scenario: str = "demo", static_dir: str | Path | None = None) -> FastAPI:
+    plant = plant or Plant(scenario=scenario, ml=ml_enabled())
     rt = Runtime(plant, copilot or ChatCopilot(plant), detectors if detectors is not None else detectors_from_env(),
                  scenario)
     rt.running = autostart
@@ -126,7 +149,7 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
 
     @app.get("/api/health")
     async def health():
-        return {"ok": True, "mode": rt.mode, "vision": rt.vision.status()}
+        return {"ok": True, "mode": rt.mode, "vision": rt.vision.status(), "ml": rt.plant.ml.status}
 
     @app.get("/api/snapshot")
     async def get_snapshot():
@@ -138,6 +161,10 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
         return {"workers": [w.model_dump(mode="json") for w in st.workers.values()],
                 "stations": [{"id": s.id, "zone": s.zone, "name": s.name, "safety_critical": s.safety_critical}
                              for s in st.layout.stations.values()]}
+
+    @app.get("/api/models")
+    async def models():
+        return {"models": rt.plant.ml.cards()}
 
     @app.get("/api/oversight")
     async def oversight():
@@ -158,7 +185,7 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
                 rt.speed = max(0.1, min(cmd.speed, 120))
             elif cmd.action == "reset":
                 rt.scenario = cmd.scenario or rt.scenario
-                new = Plant(scenario=rt.scenario)
+                new = Plant(scenario=rt.scenario, ml=rt.plant.ml.available)
                 rt.set_plant(new, ChatCopilot(new, client=rt.copilot.client, offline=rt.copilot.client is None))
                 rt.running = False
         return await changed(rt.sim_status())
@@ -212,6 +239,25 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
             plan = rt.plant.all_clear()
         return await changed(plan)
 
+    @app.post("/api/safety/report")
+    async def safety_report(body: ReportIn):
+        if not rt.plant.ml.available:
+            raise HTTPException(503, "safety model not available")
+        async with rt.lock:
+            event = rt.plant.report_near_miss(body.text, body.zone, body.station)
+            incident = next(i for i in rt.plant.state.incidents.values() if event.id in i.event_ids)
+        return await changed({"event": event.model_dump(mode="json"),
+                              "incident": incident.model_dump(mode="json", exclude={"event_ids", "event_keys"})})
+
+    @app.post("/api/incidents/{incident_id}/explain")
+    async def explain_incident(incident_id: str, body: LanguageIn | None = None):
+        if incident_id not in rt.plant.state.incidents:
+            raise HTTPException(404, "unknown incident")
+        language = body.language if body else "en"
+        async with rt.lock:
+            out = await run_in_threadpool(rt.plant.explain_incident, incident_id, rt.copilot.client, language)
+        return {"explanations": out}
+
     # ------------------------------------------------------------------ copilot
 
     @app.post("/api/chat")
@@ -264,14 +310,28 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
         except WebSocketDisconnect:
             rt.clients.discard(websocket)
 
-    return app
+    # ------------------------------------------------------------------ built dashboard (Docker / Render)
 
+    static_dir = static_dir or os.getenv("SHIFTLOOP_STATIC_DIR")
+    static = Path(static_dir).resolve() if static_dir else None
+    if static is not None and (static / "index.html").is_file():
+
+        @app.get("/{path:path}", include_in_schema=False)
+        async def dashboard(path: str):
+            if path == "api" or path.startswith("api/"):
+                raise HTTPException(404, "not found")
+            target = (static / path).resolve()
+            if path and target.is_file() and static in target.parents:
+                return FileResponse(target)
+            return FileResponse(static / "index.html")  # client-side routes
+
+    return app
 
 
 def main() -> None:
     import uvicorn
 
-    uvicorn.run("shiftloop.api.app:make_default", factory=True, host="0.0.0.0", port=8000)
+    uvicorn.run("shiftloop.api.app:make_default", factory=True, host="0.0.0.0", port=int(os.getenv("PORT", "8000")))
 
 
 def make_default() -> FastAPI:

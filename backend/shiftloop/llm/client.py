@@ -17,6 +17,10 @@ def make_client() -> anthropic.Anthropic | None:
     if os.getenv("SHIFTLOOP_OFFLINE") == "1":
         return None
     try:
-        return anthropic.Anthropic()
-    except Exception:  # the SDK raises when no credential source resolves
+        client = anthropic.Anthropic()
+    except Exception:  # the SDK raises when a configured credential source is broken
         return None
+    # the client constructs even with no credentials and only fails on the first request, so check here
+    if not (client.api_key or client.auth_token or getattr(client, "credentials", None)):
+        return None
+    return client

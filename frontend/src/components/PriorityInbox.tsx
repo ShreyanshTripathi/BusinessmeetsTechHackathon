@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import type { ModifiedAssignment } from '../api'
 import { actionLabel, agentLabel, clockTime, severityTone, TONE_BORDER } from '../format'
-import type { Decision, Incident, Snapshot } from '../types'
+import type { Decision, Explanation, Incident, Snapshot } from '../types'
+import ModelBox from './ModelBox'
 import { Button } from './ui'
 
 type OnDecision = (id: string, decision: Decision['decision'], reason: string, assignments?: ModifiedAssignment[]) => void
+type OnExplain = (id: string) => Promise<Explanation[]>
 
 const RULES: Record<string, string> = {
   safety_stop: 'Safety rule · cannot be dismissed',
@@ -15,7 +17,7 @@ const SEVERITY_TEXT = {
   red: 'text-red-300', orange: 'text-orange-300', amber: 'text-amber-200', blue: 'text-sky-300', green: 'text-emerald-300', slate: 'text-slate-400',
 }
 
-function IncidentCard({ inc, onDecision }: { inc: Incident; onDecision: OnDecision }) {
+function IncidentCard({ inc, onDecision, onExplain }: { inc: Incident; onDecision: OnDecision; onExplain?: OnExplain }) {
   const [mode, setMode] = useState<'view' | 'dismiss' | 'change'>('view')
   const [reason, setReason] = useState('')
   const rec = inc.recommendation
@@ -67,6 +69,8 @@ function IncidentCard({ inc, onDecision }: { inc: Incident; onDecision: OnDecisi
           {rec.escalations.length > 0 && <p className="mt-2 text-xs text-slate-500">Calls {rec.escalations.join(', ')}</p>}
         </div>
       )}
+
+      <ModelBox predictions={inc.predictions ?? []} onExplain={onExplain ? () => onExplain(inc.id) : undefined} />
 
       <details className="mt-3 text-xs text-slate-500">
         <summary className="cursor-pointer select-none hover:text-slate-300">Why? ({inc.evidence.length} signals)</summary>
@@ -130,13 +134,14 @@ function ReasonInput({ value, onChange }: { value: string; onChange: (v: string)
 }
 
 export default function PriorityInbox({
-  active, held, inProgress, attention, onDecision,
+  active, held, inProgress, attention, onDecision, onExplain,
 }: {
   active: Incident[]
   held: Incident[]
   inProgress: Incident[]
   attention: Snapshot['attention']
   onDecision: OnDecision
+  onExplain?: OnExplain
 }) {
   return (
     <div className="space-y-4">
@@ -150,7 +155,7 @@ export default function PriorityInbox({
           <p className="mt-1 text-sm text-slate-500">Nothing needs you right now.</p>
         </div>
       ) : (
-        active.map((inc) => <IncidentCard key={inc.id} inc={inc} onDecision={onDecision} />)
+        active.map((inc) => <IncidentCard key={inc.id} inc={inc} onDecision={onDecision} onExplain={onExplain} />)
       )}
       {inProgress.length > 0 && (
         <p className="text-xs text-slate-500">In progress: {inProgress.map((i) => i.title).join(' · ')}</p>

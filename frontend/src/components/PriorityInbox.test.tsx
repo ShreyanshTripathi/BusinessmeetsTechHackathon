@@ -90,3 +90,34 @@ test('empty inbox says nothing needs attention', () => {
   render(<PriorityInbox active={[]} held={[]} inProgress={[]} attention={s0.attention} onDecision={vi.fn()} />)
   expect(screen.getByText(/nothing needs you/i)).toBeInTheDocument()
 })
+
+import forecast from '../test/fixtures/snapshot_forecast.json'
+
+const sf = forecast as unknown as Snapshot
+
+function renderForecast(onExplain?: (id: string) => Promise<{ event_id: string; model: string; text: string; mode: 'claude' | 'offline' }[]>) {
+  render(
+    <PriorityInbox active={sf.incidents.active} held={sf.incidents.held} inProgress={[]} attention={sf.attention}
+      onDecision={vi.fn()} onExplain={onExplain} />,
+  )
+  return screen.getByRole('article', { name: /Trainee without sign-off at S09/ })
+}
+
+test('cards show what the model predicted and why', () => {
+  const card = renderForecast()
+  const pred = sf.incidents.active.find((i) => i.title.includes('S09'))!.predictions[0]
+  const model = within(card).getByRole('group', { name: /model/i })
+  expect(model).toHaveTextContent(/staffing model/i)
+  expect(model).toHaveTextContent(`${Math.round(pred.risk * 100)}%`)
+  expect(model).toHaveTextContent(pred.explanation.slice(0, 40))
+  expect(within(card).queryByRole('button', { name: /explain with claude/i })).not.toBeInTheDocument()
+})
+
+test('with Claude available, the supervisor can ask for a plain-language explanation', async () => {
+  const inc = sf.incidents.active.find((i) => i.title.includes('S09'))!
+  const onExplain = vi.fn().mockResolvedValue([{ event_id: inc.predictions[0].event_id, model: 'staffing_model', text: 'S09 has a trainee and nobody free to help.', mode: 'claude' }])
+  const card = renderForecast(onExplain)
+  await userEvent.click(within(card).getByRole('button', { name: /explain with claude/i }))
+  expect(onExplain).toHaveBeenCalledWith(sf.incidents.active.find((i) => i.title.includes('S09'))!.id)
+  expect(await within(card).findByText('S09 has a trainee and nobody free to help.')).toBeInTheDocument()
+})
