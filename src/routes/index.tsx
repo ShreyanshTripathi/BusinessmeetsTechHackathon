@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { ChevronDown, ShieldCheck } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { ChevronDown, ShieldAlert } from "lucide-react";
 import { api } from "@/lib/api";
 import { useLive } from "@/lib/live";
 import { hhmm, minutesBetween } from "@/lib/time";
-import { ActBtn, Code, Empty, Section, sevBorder } from "@/components/sl/bits";
+import { ActBtn, Btn, Code, sevBorder } from "@/components/sl/bits";
 import { DecisionCard } from "@/components/sl/DecisionCard";
 import { ProposalCard } from "@/components/sl/ProposalCard";
 import { EmergencyPanel, RestartPlanCard } from "@/components/sl/Emergency";
@@ -29,152 +29,97 @@ function DecidePage() {
   const { snap } = useLive();
   if (!snap) return null;
   if (snap.emergency) return <EmergencyPanel em={snap.emergency} />;
+  const [first, ...other] = snap.incidents.active;
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(340px,1fr)]">
-      <div className="space-y-6">
-        <RestartPlanCard />
-        <DangerStrip snap={snap} />
-        <Section title="Needs your decision" right={<span className="font-display text-lg text-muted-foreground">{snap.attention.signals.toLocaleString("en-US")} signals filtered → {snap.attention.active} decision{snap.attention.active === 1 ? "" : "s"}</span>}>
-          {snap.incidents.active.length === 0 ? (
-            <Empty>Nothing needs you right now.</Empty>
-          ) : (
-            <div className="space-y-4">
-              {snap.incidents.active.map((inc) => <DecisionCard key={inc.id} inc={inc} clock={snap.clock} notifications={snap.notifications} />)}
+    <div className="mx-auto max-w-7xl">
+      <RestartPlanCard />
+      <SafetyNotice snap={snap} />
+      <div className="grid items-start gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(300px,320px)] xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="min-w-0 py-7 lg:pr-10 lg:py-10">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <p className="text-sm font-bold uppercase text-muted-foreground">Supervisor decision</p>
+              <h1 className="mt-1 font-display text-3xl leading-tight sm:text-4xl">Needs your decision</h1>
             </div>
+            <span className="text-sm text-muted-foreground">{snap.attention.signals.toLocaleString("en-US")} signals filtered → {snap.attention.active} decision{snap.attention.active === 1 ? "" : "s"}</span>
+          </div>
+          {first ? <DecisionCard inc={first} clock={snap.clock} notifications={snap.notifications} featured /> : (
+            <div className="border-t border-border py-12 text-2xl font-semibold">Nothing needs you right now.</div>
           )}
-          <Collapsible label={`${snap.incidents.held.length} more held back`} show={snap.incidents.held.length > 0}>
-            {snap.incidents.held.map((inc) => <DecisionCard key={inc.id} inc={inc} clock={snap.clock} notifications={snap.notifications} />)}
-          </Collapsible>
-        </Section>
-        {snap.proposals.length > 0 && (
-          <Section title="Copilot proposals">
-            <div className="grid gap-3 md:grid-cols-2">{snap.proposals.map((p) => <ProposalCard key={p.id} p={p} />)}</div>
-          </Section>
-        )}
-      </div>
-      <div className="space-y-6">
-        <Escalations snap={snap} />
-        <Section title="In progress">
-          {snap.incidents.in_progress.length === 0 ? <Empty>No accepted work in progress.</Empty> : (
-            <div className="space-y-2">
-              {snap.incidents.in_progress.map((i) => (
-                <div key={i.id} className={cn("rounded-lg border border-border border-l-4 bg-card p-3", sevBorder(i.severity))}>
-                  <div className="flex items-baseline gap-2"><span className="font-display text-2xl font-bold">{i.zone} · {i.stations.join(" ")}</span><span className="ml-auto text-sm text-muted-foreground">{hhmm(i.updated)}</span></div>
-                  <div className="text-lg">{i.title}</div>
-                </div>
-              ))}
-            </div>
-          )}
-        </Section>
-        <KpiPanel snap={snap} />
+          {other.length > 0 && <Collapsible label={`${other.length} more decision${other.length === 1 ? "" : "s"}`}>
+            <div className="space-y-4">{other.map((inc) => <DecisionCard key={inc.id} inc={inc} clock={snap.clock} notifications={snap.notifications} />)}</div>
+          </Collapsible>}
+          {snap.incidents.held.length > 0 && <Collapsible label={`${snap.incidents.held.length} held back`}>
+            <div className="space-y-4">{snap.incidents.held.map((inc) => <DecisionCard key={inc.id} inc={inc} clock={snap.clock} notifications={snap.notifications} />)}</div>
+          </Collapsible>}
+          {(snap.proposals.length > 0 || snap.incidents.in_progress.length > 0) && <Collapsible label={`More shift activity · ${snap.proposals.length + snap.incidents.in_progress.length}`}>
+            {snap.proposals.length > 0 && <section className="mb-8"><h2 className="mb-3 text-xl font-semibold">Copilot proposals</h2><div className="grid gap-3 sm:grid-cols-2">{snap.proposals.map((p) => <ProposalCard key={p.id} p={p} />)}</div></section>}
+            {snap.incidents.in_progress.length > 0 && <section><h2 className="mb-3 text-xl font-semibold">In progress</h2><div className="space-y-2">{snap.incidents.in_progress.map((i) => <div key={i.id} className={cn("border-l-4 bg-card p-4", sevBorder(i.severity))}><strong>Zone {i.zone} · {i.stations.join(" ")}</strong><span className="ml-3 text-muted-foreground">{hhmm(i.updated)}</span><div>{i.title}</div></div>)}</div></section>}
+          </Collapsible>}
+        </div>
+        <aside className="min-w-0 border-t border-border bg-secondary/40 px-5 py-7 lg:min-h-[calc(100vh-132px)] lg:border-t-0 lg:border-l lg:px-7 lg:py-10">
+          <Escalations snap={snap} />
+          <LineStatus snap={snap} />
+        </aside>
       </div>
     </div>
   );
 }
 
-function DangerStrip({ snap }: { snap: Snapshot }) {
-  const safety = snap.kpis.open_safety;
-  return (
-    <div className={cn("flex items-center gap-4 rounded-lg border p-4", safety ? "border-critical bg-critical/10" : "border-border bg-card")}>
-      <ShieldCheck className={cn("h-10 w-10", safety ? "text-critical" : "text-muted-foreground")} />
-      <div className="font-display text-3xl font-bold">
-        {safety ? `${safety} open safety issue${safety > 1 ? "s" : ""}` : "No one in danger right now"}
-      </div>
-    </div>
-  );
+function SafetyNotice({ snap }: { snap: Snapshot }) {
+  if (!snap.kpis.open_safety) return null;
+  return <div className="flex items-center gap-3 border-b-2 border-critical bg-critical/10 px-5 py-4 text-critical"><ShieldAlert className="h-7 w-7 shrink-0" /><strong className="text-xl">{snap.kpis.open_safety} open safety issue{snap.kpis.open_safety === 1 ? "" : "s"}</strong></div>;
 }
 
-function Collapsible({ label, show, children }: { label: string; show: boolean; children: React.ReactNode }) {
+function Collapsible({ label, children }: { label: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  if (!show) return null;
-  return (
-    <div>
-      <button onClick={() => setOpen(!open)} className="inline-flex min-h-11 items-center gap-2 text-lg text-muted-foreground hover:text-foreground">
-        <ChevronDown className={cn("h-5 w-5 transition-transform", open && "rotate-180")} /> {label}
-      </button>
-      {open && <div className="mt-2 space-y-4 opacity-90">{children}</div>}
-    </div>
-  );
+  return <section className="mt-6 border-t border-border pt-3">
+    <Btn variant="ghost" aria-expanded={open} onClick={() => setOpen(!open)} className="w-full justify-between px-1 text-left text-base font-semibold">{label}<ChevronDown className={cn("h-5 w-5 transition-transform", open && "rotate-180")} /></Btn>
+    {open && <div className="mt-4">{children}</div>}
+  </section>;
 }
 
 function Escalations({ snap }: { snap: Snapshot }) {
   const { act } = useLive();
   const waiting = snap.escalations.filter((e) => !e.acknowledged_at);
-  const done = snap.escalations.filter((e) => e.acknowledged_at);
-  return (
-    <Section title="Waiting on confirmation">
-      {waiting.length === 0 ? <Empty>Every team you called has confirmed.</Empty> : (
-        <div className="space-y-2">
-          {waiting.map((e) => {
-            const code = snap.notifications.find((n) => n.incident_id === e.incident_id && n.code)?.code;
-            return (
-              <div key={e.id} className="rounded-lg border-2 border-high bg-card p-4">
-                <div className="flex flex-wrap items-baseline gap-2">
-                  <span className="font-display text-2xl font-bold capitalize">{e.team}</span>
-                  {code && <Code code={code} className="text-base" />}
-                  <span className="ml-auto font-display text-2xl font-bold text-high">waiting {minutesBetween(e.time, snap.clock)} min</span>
-                </div>
-                <div className="text-lg">{e.message}</div>
-                <div className="text-sm text-muted-foreground">called {hhmm(e.time)}{e.reminders ? ` · ${e.reminders} reminder${e.reminders > 1 ? "s" : ""} sent` : ""}</div>
-                <ActBtn className="mt-2 w-full" onClick={() => act(() => api.ackEscalation(e.id))}>Confirmed</ActBtn>
-              </div>
-            );
-          })}
-        </div>
-      )}
-      {done.length > 0 && (
-        <div className="space-y-1 text-base text-muted-foreground">
-          {done.map((e) => <div key={e.id}>✓ <span className="capitalize">{e.team}</span> confirmed at {hhmm(e.acknowledged_at)}: {e.message}</div>)}
-        </div>
-      )}
-    </Section>
-  );
+  const done = snap.escalations.filter((e) => e.acknowledged_at && minutesBetween(e.acknowledged_at, snap.clock) <= 30);
+  return <section>
+    <div className="mb-4 flex items-baseline justify-between gap-3"><h2 className="text-lg font-bold">Waiting on confirmation</h2><span className="text-xl font-bold tabular-nums">{waiting.length}</span></div>
+    {waiting.length === 0 ? <p className="border-t border-border py-4 text-muted-foreground">No teams waiting to confirm.</p> : <div className="space-y-3">{waiting.map((e) => {
+      const code = snap.notifications.find((n) => n.incident_id === e.incident_id && n.code)?.code;
+      return <div key={e.id} className="border-t-2 border-high bg-card p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-xl capitalize">{e.team}</strong><span className="font-bold text-high">{minutesBetween(e.time, snap.clock)} min waiting</span></div>
+        {code && <Code code={code} className="text-sm" />}
+        <p className="mt-1 leading-snug">{e.message}</p>
+        <p className="mt-1 text-sm text-muted-foreground">Called {hhmm(e.time)}{e.reminders ? ` · ${e.reminders} reminder${e.reminders > 1 ? "s" : ""}` : ""}</p>
+        <ActBtn className="mt-3 w-full" onClick={() => act(() => api.ackEscalation(e.id))}>Confirmed</ActBtn>
+      </div>;
+    })}</div>}
+    {done.length > 0 && <Collapsible label={`${done.length} recently confirmed`}><div className="space-y-2 text-sm">{done.map((e) => <p key={e.id}><span className="capitalize">{e.team}</span> · {hhmm(e.acknowledged_at)} · {e.message}</p>)}</div></Collapsible>}
+  </section>;
 }
 
-const IMPACT_LABEL: Record<string, [string, string]> = {
-  downtime_avoided_min: ["Downtime avoided", "min"],
-  energy_saved_kwh: ["Energy saved", "kWh"],
-  rework_avoided_cars: ["Rework avoided", "cars"],
-};
-
-function KpiPanel({ snap }: { snap: Snapshot }) {
+function LineStatus({ snap }: { snap: Snapshot }) {
   const k = snap.kpis;
   const top = Object.entries(k.downtime_min).slice(0, 3);
   const impact = Object.entries(k.impact);
-  return (
-    <Section title="Line vs plan">
-      <div className="rounded-lg border border-border bg-card p-4">
-        <div className="grid grid-cols-3 gap-3">
-          <Stat label="Cars / plan" value={`${k.cars_built} / ${k.plan}`} />
-          <Stat label="Output" value={`${k.output_pct}%`} />
-          <Stat label="Downtime" value={`${k.downtime_total_min} min`} />
-          <Stat label="Defects" value={String(k.defects)} />
-          <Stat label="Open incidents" value={String(k.open_incidents)} />
-          <Stat label="Open safety" value={String(k.open_safety)} alert={k.open_safety > 0} />
-        </div>
-        {top.length > 0 && (
-          <div className="mt-3 text-base"><span className="text-muted-foreground">Most downtime: </span>{top.map(([s, m]) => `${s} ${m} min`).join(" · ")}</div>
-        )}
-        {impact.length > 0 && (
-          <div className="mt-3 border-t border-border pt-3">
-            <div className="text-sm uppercase tracking-wider text-muted-foreground">Saved by decisions this shift</div>
-            <div className="mt-1 flex flex-wrap gap-4">
-              {impact.map(([key, v]) => (
-                <div key={key}><span className="font-display text-2xl font-bold">{v} {IMPACT_LABEL[key]?.[1] ?? ""}</span> <span className="text-muted-foreground">{IMPACT_LABEL[key]?.[0] ?? key}</span></div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </Section>
-  );
+  return <section className="mt-10 border-t border-border pt-7">
+    <h2 className="mb-5 text-lg font-bold">Line vs plan</h2>
+    <div className="grid grid-cols-2 gap-x-4 gap-y-5">
+      <Stat label="Cars / plan" value={`${k.cars_built} / ${k.plan}`} />
+      <Stat label="Output" value={`${k.output_pct}%`} />
+      <Stat label="Downtime" value={`${k.downtime_total_min} min`} />
+      <Stat label="Defects" value={String(k.defects)} />
+    </div>
+    <div className="mt-6 space-y-2 border-t border-border pt-4 text-sm">
+      <div className="flex justify-between"><span>Open incidents</span><strong>{k.open_incidents}</strong></div>
+      {k.open_safety > 0 && <div className="flex justify-between text-critical"><span>Open safety issues</span><strong>{k.open_safety}</strong></div>}
+      {top.length > 0 && <p className="text-muted-foreground">Most downtime: {top.map(([s, m]) => `${s} ${m} min`).join(" · ")}</p>}
+    </div>
+    {impact.length > 0 && <Collapsible label="Saved by decisions this shift"><div className="space-y-2 text-sm">{impact.map(([key, value]) => <p key={key}>{key.replaceAll("_", " ")}: <strong>{value}</strong></p>)}</div></Collapsible>}
+  </section>;
 }
 
-function Stat({ label, value, alert }: { label: string; value: string; alert?: boolean }) {
-  return (
-    <div>
-      <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className={cn("font-display text-2xl font-bold tabular-nums", alert && "text-critical")}>{value}</div>
-    </div>
-  );
+function Stat({ label, value }: { label: string; value: string }) {
+  return <div><div className="text-sm text-muted-foreground">{label}</div><div className="text-2xl font-bold tabular-nums">{value}</div></div>;
 }
