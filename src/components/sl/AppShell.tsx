@@ -31,20 +31,20 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2">
-          <Link to="/" className="font-display text-2xl font-bold tracking-wide">ShiftLoop</Link>
+      <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+          <Link to="/" className="font-display text-lg">ShiftLoop</Link>
           <div className="flex items-baseline gap-2">
-            <span className="font-display text-4xl font-bold leading-none tabular-nums">{hhmm(snap?.clock)}</span>
-            <span className="text-xs uppercase text-muted-foreground">plant time</span>
+            <span className="text-3xl font-bold leading-none tabular-nums">{hhmm(snap?.clock)}</span>
+            <span className="text-xs font-semibold uppercase text-muted-foreground">plant time</span>
           </div>
           {snap && !snap.sim.running && (
-            <span className="inline-flex items-center gap-1 rounded bg-secondary px-2 py-1 font-display text-base font-bold uppercase"><Pause className="h-4 w-4" /> Paused</span>
+            <span className="inline-flex items-center gap-1 rounded bg-secondary px-2 py-1 text-sm font-bold uppercase"><Pause className="h-4 w-4" /> Paused</span>
           )}
           <nav className="order-last flex w-full gap-1 sm:order-none sm:ml-4 sm:w-auto">
             {NAV.map((n) => (
               <Link key={n.to} to={n.to} activeOptions={{ exact: true }}
-                className="flex min-h-11 flex-1 items-center justify-center rounded-md px-5 font-display text-xl font-semibold text-muted-foreground hover:bg-accent sm:flex-none"
+                className="flex min-h-11 flex-1 items-center justify-center rounded-md px-5 text-base font-semibold text-muted-foreground hover:bg-accent sm:flex-none"
                 activeProps={{ className: "bg-secondary !text-foreground" }}>
                 {n.label}
               </Link>
@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </DropdownMenu>
           </div>
         </div>
-        {demo && <div className="bg-medium px-4 py-1 text-center font-display text-base font-bold uppercase tracking-wider text-medium-foreground">DEMO DATA: backend not connected</div>}
+        {demo && <div className="border-b border-border bg-secondary px-4 py-1 text-center text-sm font-bold uppercase text-secondary-foreground">DEMO DATA: backend not connected</div>}
         {em && loc.pathname !== "/" && (
           <Link to="/" className="flex min-h-12 items-center gap-3 bg-critical px-4 py-2 text-critical-foreground">
             <Flame className="h-6 w-6" />
@@ -117,7 +117,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       )}
 
-      <main className="mx-auto max-w-[1600px] p-4">
+      <main className={cn("mx-auto max-w-[1600px]", loc.pathname === "/" ? "px-4 sm:px-6" : "p-4 sm:p-6")}>
         {snap ? children : (
           <div className="py-24 text-center text-2xl text-muted-foreground">{conn === "connecting" ? "Connecting to the line…" : "Waiting for data…"}</div>
         )}
