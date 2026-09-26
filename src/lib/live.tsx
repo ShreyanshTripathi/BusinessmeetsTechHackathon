@@ -88,7 +88,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     let reconnectT: ReturnType<typeof setTimeout> | null = null;
     let pollT: ReturnType<typeof setInterval> | null = null;
     let gotData = false;
-    setConn("connecting");
+    setConn(DEMO_ENABLED ? "demo" : "connecting");
 
     const onSnap = (s: Snapshot) => {
       gotData = true;
@@ -124,7 +124,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     };
     open();
     api.snapshot().then(onSnap).catch(() => {});
-    const demoT = setTimeout(() => { if (!gotData) { setDemo(true); setConn("demo"); } }, 5000);
+    const demoT = setTimeout(() => { if (!gotData && DEMO_ENABLED) { setDemo(true); setConn("demo"); } }, 5000);
 
     return () => {
       closed = true;
