@@ -15,14 +15,14 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, model_validator
 
 from ..factory import zone_of
-
 from ..llm.chat import ChatCopilot
 from ..llm.handover import write_handover
 from ..oversight import oversight_report
 from ..plant import Plant
 from ..vision.service import VisionService, detectors_from_env
 from ..whatif import what_if
-from .snapshot import snapshot
+from .snapshot import incident_json, snapshot
+from .timeline import priority_timeline
 
 
 class SimCommand(BaseModel):
@@ -166,6 +166,10 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
     async def models():
         return {"models": rt.plant.ml.cards()}
 
+    @app.get("/api/priority/timeline")
+    async def timeline():
+        return priority_timeline(rt.plant)
+
     @app.get("/api/oversight")
     async def oversight():
         return oversight_report(rt.plant.state, rt.plant.central)
@@ -247,7 +251,7 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
             event = rt.plant.report_near_miss(body.text, body.zone, body.station)
             incident = next(i for i in rt.plant.state.incidents.values() if event.id in i.event_ids)
         return await changed({"event": event.model_dump(mode="json"),
-                              "incident": incident.model_dump(mode="json", exclude={"event_ids", "event_keys"})})
+                              "incident": incident_json(incident)})
 
     @app.post("/api/incidents/{incident_id}/explain")
     async def explain_incident(incident_id: str, body: LanguageIn | None = None):

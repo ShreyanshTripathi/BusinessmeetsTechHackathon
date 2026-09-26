@@ -161,3 +161,21 @@ def test_low_severity_incidents_never_take_an_inbox_slot():
     state, central = FactoryState.create(), CentralIntelligence()
     central.ingest(state, [ev(state, "staffing", "qualification_expiring", "D", "S20", "low")])
     assert central.open_incidents(state)[0].visibility == "held"
+
+
+def test_alerts_carry_a_code_and_a_spoken_phrase():
+    state, central = FactoryState.create(), CentralIntelligence()
+    central.ingest(state, [ev(state, "safety", "possible_fire", "C", None, "high", {"needs_verification": True}, key="safety:C:fire")])
+    central.ingest(state, [ev(state, "safety", "battery_overheating", "C", "S18", "critical", {"temp_c": 61}, key="safety:C:battery:S18")])
+    n = state.notifications[-1]
+    assert n.level == "critical" and n.code == "S-C18"
+    assert n.spoken.startswith("Battery overheating at station 18 and possible fire")
+    assert "+" not in n.spoken and n.spoken.endswith(".")
+    inc = central.open_incidents(state)[0]
+    assert inc.likely_cause == "Battery pack overheating at S18 is the likely source of the smoke"
+
+
+def test_zone_wide_alert_code_has_no_station():
+    state, central = FactoryState.create(), CentralIntelligence()
+    central.ingest(state, [ev(state, "staffing", "fire_warden_gap", "B", None, "high", {"donors": []}, key="staffing:warden:B")])
+    assert state.notifications[-1].code == "W-B"

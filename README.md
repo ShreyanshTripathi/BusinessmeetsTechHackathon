@@ -1,6 +1,10 @@
-# ShiftLoop: Central Factory Intelligence (MVP)
+# NERV: Central Factory Intelligence (MVP)
 
 Tesla Giga Berlin hackathon. Theme: *Sustainably increase efficiency through AI.*
+
+**Live app:** [nerv-tech.lovable.app](https://nerv-tech.lovable.app/)
+
+The code still uses the working name `shiftloop` (Python package, `SHIFTLOOP_*` settings, service name).
 
 Three specialised agents (**Staffing**, **General Assembly**, **Fire & Safety**) watch their part of the line.
 A **central intelligence** merges their findings into incidents, ranks them (safety first), matches people to
@@ -8,6 +12,28 @@ problems and recommends actions. The **supervisor dashboard** shows at most thre
 notifications, a chat copilot (Claude), an emergency mode and a full oversight log. Humans make every decision.
 
 See [PLAN.md](PLAN.md) for the product plan and [roles/](roles/) for the role definitions it is built from.
+
+## Benefits
+
+1. **One central brain for the factory.** Staffing, assembly and safety are no longer separate systems: the
+   central intelligence joins their findings, so a trainee plus rising defects at one station becomes one
+   incident with one likely cause.
+2. **Transparent, explainable decisions.** Every model prediction comes with its main drivers and a
+   plain-language explanation (optionally rewritten by Claude). Every incident says in one line why it is ranked
+   where it is, with the points behind its score. The oversight log records every recommendation and decision.
+3. **Severity and action items, ready to act on.** Each incident carries a severity, a priority tier and a
+   recommendation: concrete steps, who to send and which team to call. Today a supervisor works this out by hand.
+4. **Problems predicted before they happen.** Tool failure is forecast from torque drift, parts run-out from
+   stock and consumption, and missed output targets and staffing gaps by the ML models. That leaves time to plan
+   a fix, for example a tool swap at the next break.
+5. **Staff shortages predicted and covered.** The staffing model flags stations that may lose qualified
+   cover this shift. The matching engine proposes qualified, available replacements within working-time limits,
+   and backfills any station it takes them from.
+6. **Voice alerts for decisions on the go.** Every alert includes a short phrase ready to be read aloud, so
+   the dashboard can speak critical alerts to a supervisor walking the line.
+7. **Modular and ready for new models.** Agents share one event format, and camera models plug into
+   detector slots, so richer multimodal or spatial models can replace or join the current ones without
+   changing the rest of the system.
 
 ## Run it
 
@@ -39,6 +65,25 @@ template handover; everything else works the same.
 | `SHIFTLOOP_CHAT_MODEL` | `claude-sonnet-5` | chat copilot |
 | `SHIFTLOOP_SUMMARY_MODEL` | `claude-haiku-4-5` | shift handover |
 | `SHIFTLOOP_OFFLINE=1` | unset | force offline mode |
+
+### Prioritization
+
+Every live incident is re-scored each simulated minute ([central/ranking.py](backend/shiftloop/central/ranking.py)).
+A strict tier comes first; the score (0–100) orders incidents within the tier, and each tier owns a 25-point band:
+
+| Tier | Band | What |
+|---|---|---|
+| 0 Safety | 75–100 | live hazards, fire warden gaps, anything under the safety-stop rule (pinned at 100) |
+| 1 Line stoppage | 50–75 | station stopped, starved, uncovered or below takt; tool failure or part run-out within 15 min |
+| 2 Quality spill | 25–50 | defect patterns, trainee without sign-off at a safety-critical station, near-miss reports |
+| 3 Shift hygiene | 0–25 | forecasts, cover planning, working-time and certification housekeeping |
+
+Within the band: severity (critical 60, high 40, medium 20, low 10) + impact (people exposed, share of line
+output lost, defect escape risk; 0–20) + ML risk × 20 + aging (+2 per minute active without a decision, max +20).
+At most three medium-or-higher incidents are *active*; an active one keeps its slot unless a same-tier challenger
+beats it by 5 points, so the list does not flicker. Each incident carries `tier`, `priority_reason`,
+`score_parts`, `trend` and `waiting_min`, and keeps a history of its priority; `GET /api/priority/timeline`
+returns it as bars, score points and markers for the timeline page.
 
 ### ML models (random forests)
 

@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 from collections import Counter
+from datetime import datetime
 
 from .central.engine import CentralIntelligence
+from .models import Incident
 from .state import FactoryState
 
 DATA_USE = {
@@ -47,6 +49,7 @@ def oversight_report(state: FactoryState, central: CentralIntelligence) -> dict:
         "agents": agents,
         "expert_queue": expert_queue,
         "attention": central.attention_summary(state),
+        "priority": priority_summary(state),
         "log": [d.model_dump(mode="json") for d in reversed(state.decisions)],
         "data_use": DATA_USE,
         "works_council": {
@@ -56,3 +59,36 @@ def oversight_report(state: FactoryState, central: CentralIntelligence) -> dict:
             "decision_log_retained": True,
         },
     }
+
+
+MOVES = ("promoted", "demoted", "tier_up", "tier_down", "reopened")
+
+
+def _active_since(inc: Incident, until: datetime) -> datetime | None:
+    """When the incident last entered the active list before `until` (None if it was not active then)."""
+    since = None
+    for p in inc.history:
+        if p.time >= until:  # the decision itself is recorded at `until`
+            break
+        if p.visibility == "active" and p.status == "open":
+            since = since or p.time
+        else:
+            since = None
+    return since
+
+
+def priority_summary(state: FactoryState) -> dict:
+    """How priorities moved over the shift, and how long active incidents waited for a decision."""
+    moves = sorted(({"time": p.time.isoformat(), "incident_id": inc.id, "title": inc.title, "change": p.change,
+                     "tier": p.tier, "reason": p.reason}
+                    for inc in state.incidents.values() for p in inc.history if p.change in MOVES),
+                   key=lambda m: m["time"], reverse=True)
+    waits = []
+    for d in state.decisions:
+        inc = state.incidents.get(d.incident_id)
+        since = _active_since(inc, d.time) if inc else None
+        if since is not None:
+            waits.append((d.time - since).total_seconds() / 60)
+    return {"moves": moves[:50], "counts": dict(Counter(m["change"] for m in moves)),
+            "decisions_timed": len(waits),
+            "avg_minutes_active_to_decision": round(sum(waits) / len(waits), 1) if waits else None}

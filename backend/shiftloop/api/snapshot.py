@@ -4,17 +4,20 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..kpis import kpis
-from ..models import Incident
+from ..models import Incident, Severity
 
 if TYPE_CHECKING:
     from ..plant import Plant
 
-SEVERITY_ORDER = ["info", "low", "medium", "high", "critical"]
+
+def incident_json(inc: Incident) -> dict:
+    # history is served by /api/priority/timeline to keep the per-minute snapshot small
+    return inc.model_dump(mode="json", exclude={"event_ids", "event_keys", "waiting_since", "history"})
 
 
-def _incident(inc: Incident) -> dict:
-    d = inc.model_dump(mode="json", exclude={"event_ids", "event_keys"})
-    return d
+def _raise(alerts: dict[str, str], key: str, sev: Severity) -> None:
+    if sev.rank > Severity(alerts.get(key, "info")).rank:
+        alerts[key] = sev.value
 
 
 def snapshot(plant: "Plant", sim: dict, mode: str) -> dict:
@@ -26,12 +29,9 @@ def snapshot(plant: "Plant", sim: dict, mode: str) -> dict:
     station_alert: dict[str, str] = {}
     zone_alert: dict[str, str] = {}
     for inc in open_:
-        sev = inc.severity.value
         for sid in inc.stations:
-            if SEVERITY_ORDER.index(sev) > SEVERITY_ORDER.index(station_alert.get(sid, "info")):
-                station_alert[sid] = sev
-        if SEVERITY_ORDER.index(sev) > SEVERITY_ORDER.index(zone_alert.get(inc.zone, "info")):
-            zone_alert[inc.zone] = sev
+            _raise(station_alert, sid, inc.severity)
+        _raise(zone_alert, inc.zone, inc.severity)
 
     stations = []
     for sid, s in st.layout.stations.items():
@@ -80,9 +80,9 @@ def snapshot(plant: "Plant", sim: dict, mode: str) -> dict:
         "zones": zones,
         "stations": stations,
         "incidents": {
-            "active": [_incident(i) for i in open_ if i.visibility == "active"],
-            "held": [_incident(i) for i in open_ if i.visibility == "held"],
-            "in_progress": [_incident(i) for i in st.incidents.values() if i.status == "accepted"],
+            "active": [incident_json(i) for i in open_ if i.visibility == "active"],
+            "held": [incident_json(i) for i in open_ if i.visibility == "held"],
+            "in_progress": [incident_json(i) for i in st.incidents.values() if i.status == "accepted"],
         },
         "notifications": [n.model_dump(mode="json") for n in reversed(st.notifications[-40:])],
         "escalations": [e.model_dump(mode="json") for e in st.escalations.values()

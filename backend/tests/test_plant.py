@@ -35,6 +35,13 @@ def test_quiet_shift_generates_signals_but_no_urgent_incidents():
     assert plant.state.cars_built == pytest.approx(60, abs=1)
 
 
+def test_quiet_shifts_raise_no_tool_failure_false_alarms():
+    for seed in (1, 3, 42):  # seeds whose torque noise used to trip the drift check
+        plant = Plant(scenario="quiet", seed=seed)
+        at(plant, 14, 0)
+        assert not [e for e in plant.state.events if e.type == "predicted_tool_failure"], seed
+
+
 def test_same_seed_gives_same_shift():
     a, b = Plant(scenario="demo", seed=1), Plant(scenario="demo", seed=1)
     a.step(120)
@@ -156,3 +163,11 @@ def test_accepting_every_recommendation_all_shift_never_opens_a_new_gap():
             assert after <= before, (inc.title, after - before)
         if plant.state.emergency and plant.state.now.time() >= time(10, 27):
             plant.all_clear()
+
+
+def test_borderline_qc_call_goes_to_expert_queue():
+    from shiftloop.api.snapshot import snapshot
+    plant = Plant(scenario="demo")
+    at(plant, 11, 40)
+    queue = snapshot(plant, {}, "offline")["expert_queue"]
+    assert [q["station"] for q in queue] == ["S03"] and queue[0]["confidence"] < 0.5

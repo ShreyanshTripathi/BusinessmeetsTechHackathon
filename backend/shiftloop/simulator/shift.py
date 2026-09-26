@@ -11,7 +11,6 @@ from dataclasses import dataclass, field
 from datetime import datetime, time, timedelta
 from typing import Callable
 
-from ..factory import zone_of
 from ..models import SensorReading, StaffingChange, StationReading, VisionDetection
 from ..state import FactoryState
 
@@ -169,8 +168,7 @@ class ShiftSimulator:
         if st.emergency:
             st.downtime_min[f"Zone {st.emergency.zone} emergency"] += 1
         if not blocked:
-            takt = next(iter(st.layout.stations.values())).takt_s
-            st.cars_built += 60 / takt
+            st.cars_built += 60 / st.layout.takt_s
 
 
 def demo_script(sim: ShiftSimulator) -> list[tuple[time, Callable[[], list]]]:
@@ -225,6 +223,11 @@ def demo_script(sim: ShiftSimulator) -> list[tuple[time, Callable[[], list]]]:
         sim.battery_target = 31.0
         return []
 
+    def unsure_defect_s03():
+        # a borderline call the QC model is not sure about: goes to the expert review queue
+        return [VisionDetection(time=st.now, camera="CAM-QC-S03", zone=st.layout.stations["S03"].zone, station="S03",
+                                label="defect", confidence=0.42, detail="possible paint scratch")]
+
     def shortage_s22():
         sim.stock["S22"] = 40
         sim.no_replenish_until["S22"] = sim.at(11, 45)
@@ -261,10 +264,8 @@ def demo_script(sim: ShiftSimulator) -> list[tuple[time, Callable[[], list]]]:
         (time(11, 0), shortage_s22),
         (time(11, 20), ppe(True)),
         (time(11, 26), ppe(False)),
+        (time(11, 35), unsure_defect_s03),
         (time(11, 45), exit_blocked(True)),
         (time(12, 5), exit_blocked(False)),
     ]
 
-
-def zone_for(station: str) -> str:
-    return zone_of(station)
