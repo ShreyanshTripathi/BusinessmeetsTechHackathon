@@ -33,6 +33,17 @@ class BaseAgent:
                      severity=Severity(severity), confidence=confidence, evidence=evidence or [],
                      suggested_action=suggested_action, key=f"{self.name}:{key}", data=data or {})
 
+    def forecast_condition(self, state: FactoryState, ml: dict, key: str, inbox_from: float = 0.8) -> Event:
+        """An ML prediction as a condition.
+
+        Forecasts never rank above medium, so live problems come first; under `inbox_from` risk they are low,
+        which keeps them out of the supervisor's inbox (they show as model forecasts instead).
+        """
+        severity = Severity.medium if ml["confidence"] >= inbox_from else Severity.low
+        return self.condition(state, key=key, type=ml["type"], zone=ml["zone"], station=ml.get("station"),
+                              severity=severity, confidence=ml["confidence"], evidence=ml["evidence"],
+                              suggested_action=ml["suggested_action"], data=ml["data"])
+
     def _sync(self, state: FactoryState, conditions: list[Event], scope: str = "") -> list[Event]:
         """Diff current conditions (within `scope`, a key prefix) against the active set."""
         prefix = f"{self.name}:{scope}"

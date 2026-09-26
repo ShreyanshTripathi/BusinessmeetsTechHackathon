@@ -84,6 +84,9 @@ class CentralIntelligence:
         inc.title = title_for(events)
         inc.likely_cause = likely_cause(events)
         inc.evidence = [line for e in events for line in e.evidence]
+        inc.predictions = [{"event_id": e.id, "model": e.data["model"], "risk": e.confidence,  # same rounding as the evidence text
+                            "explanation": e.data.get("explanation", ""), "drivers": e.data.get("drivers", [])}
+                           for e in events if e.data.get("model")]
         inc.recommendation = recommend(state, inc, events)
 
     def _maybe_emergency(self, state: FactoryState, inc: Incident) -> None:

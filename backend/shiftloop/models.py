@@ -209,6 +209,7 @@ class Incident(BaseModel):
     likely_cause: str | None = None
     evidence: list[str] = Field(default_factory=list)
     recommendation: Recommendation | None = None
+    predictions: list[dict[str, Any]] = Field(default_factory=list)  # ML model outputs with their explanations
 
 
 class Decision(BaseModel):

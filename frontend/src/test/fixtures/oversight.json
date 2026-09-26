@@ -1,7 +1,7 @@
 {
  "decisions": {
-  "total": 5,
-  "accept": 5,
+  "total": 6,
+  "accept": 6,
   "modify": 0,
   "dismiss": 0
  },
@@ -9,41 +9,78 @@
  "human_decided_pct": 100,
  "agents": {
   "staffing": {
-   "events": 4,
-   "incidents": 4,
+   "events": 10,
+   "incidents": 9,
    "decisions": 4,
    "accepted": 4,
    "overridden": 0
   },
   "assembly": {
-   "events": 12,
-   "incidents": 7,
-   "decisions": 2,
-   "accepted": 2,
+   "events": 15,
+   "incidents": 10,
+   "decisions": 3,
+   "accepted": 3,
    "overridden": 0
   },
   "safety": {
-   "events": 3,
-   "incidents": 1,
-   "decisions": 0,
-   "accepted": 0,
+   "events": 4,
+   "incidents": 2,
+   "decisions": 1,
+   "accepted": 1,
    "overridden": 0
   }
  },
  "expert_queue": 0,
  "attention": {
-  "signals": 18985,
-  "events": 27,
-  "incidents": 10,
-  "active": 2,
-  "held_back": 18983
+  "signals": 23366,
+  "events": 45,
+  "incidents": 18,
+  "active": 1,
+  "held_back": 23365
  },
  "log": [
   {
+   "id": "dec_0006",
+   "time": "2026-10-01T10:27:00",
+   "incident_id": "inc_0014",
+   "incident_title": "Repeated defects at S09 + cover risk, untrained at station",
+   "recommended": "Contain defects at S09",
+   "decision": "accept",
+   "reason": "",
+   "applied": [
+    "called quality"
+   ],
+   "agents": [
+    "assembly",
+    "staffing"
+   ],
+   "decided_by": "supervisor"
+  },
+  {
    "id": "dec_0005",
-   "time": "2026-10-01T09:25:00",
-   "incident_id": "inc_0009",
-   "incident_title": "Trainee without sign-off at S09",
+   "time": "2026-10-01T10:27:00",
+   "incident_id": "inc_0016",
+   "incident_title": "Fire confirmed in zone C + battery overheating",
+   "recommended": "All clear for zone C and restart",
+   "decision": "accept",
+   "reason": "",
+   "applied": [
+    "Fire wardens confirm zone C is safe and exits are clear",
+    "9 people return to their stations in zone C",
+    "Restart zone C first, then bring the upstream zone back to normal speed",
+    "Recover 11 cars: about 11 min of extra running; check working-time limits before overtime",
+    "Record the event for EHS and hand it over to the next shift"
+   ],
+   "agents": [
+    "safety"
+   ],
+   "decided_by": "supervisor"
+  },
+  {
+   "id": "dec_0004",
+   "time": "2026-10-01T09:06:00",
+   "incident_id": "inc_0014",
+   "incident_title": "Trainee without sign-off at S09 + cover risk",
    "recommended": "Support the trainee at S09",
    "decision": "accept",
    "reason": "",
@@ -54,9 +91,9 @@
    "decided_by": "supervisor"
   },
   {
-   "id": "dec_0004",
-   "time": "2026-10-01T09:25:00",
-   "incident_id": "inc_0008",
+   "id": "dec_0003",
+   "time": "2026-10-01T09:06:00",
+   "incident_id": "inc_0013",
    "incident_title": "Tool failure predicted at S12",
    "recommended": "Tool failure predicted at S12",
    "decision": "accept",
@@ -67,20 +104,6 @@
    ],
    "agents": [
     "assembly"
-   ],
-   "decided_by": "supervisor"
-  },
-  {
-   "id": "dec_0003",
-   "time": "2026-10-01T06:02:00",
-   "incident_id": "inc_0002",
-   "incident_title": "Qualification expiring at S20",
-   "recommended": "Schedule re-certification",
-   "decision": "accept",
-   "reason": "",
-   "applied": [],
-   "agents": [
-    "staffing"
    ],
    "decided_by": "supervisor"
   },

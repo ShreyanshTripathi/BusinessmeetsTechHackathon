@@ -1,9 +1,10 @@
 {
   "model": "staffing_model",
-  "trained_at": "2026-09-26T02:47:16+00:00",
+  "trained_at": "2026-09-26T04:15:50+00:00",
   "predicts": "probability that a station ends the shift without qualified cover (gap)",
   "used_by": "staffing agent, the day before the shift",
-  "algorithm": "logistic regression (scikit-learn), balanced classes",
+  "algorithm": "random forest (scikit-learn), 300 trees, min 100 station-shifts per leaf, 50% of features per split, balanced classes; settings chosen on August validation",
+  "explanations": "per prediction: drivers.tabular_drivers against reference_values; plain language: explain.py",
   "data": "synthetic: ml/generate_staffing_data.py, 26 weeks x 3 crews x 24 stations, Giga Berlin 2026 ramp",
   "features": [
     "zone",
@@ -18,26 +19,41 @@
     "zone_absence_rate_4w",
     "crew_overtime_h_last_week"
   ],
+  "reference_values": {
+    "zone": "A",
+    "shift": "early",
+    "day_of_week": "Friday",
+    "safety_critical": 0,
+    "operator_level": 2,
+    "qualified_backups": 2,
+    "zone_trainees": 1,
+    "crew_trainees": 4,
+    "zone_floaters": 2,
+    "zone_absence_rate_4w": 0.141,
+    "crew_overtime_h_last_week": 2.45
+  },
   "not_used": "no names, no individual absence history, no performance data",
   "split": "train before 2026-09-01, test from 2026-09-01",
   "metrics": {
     "test_rows": 1656,
     "test_gap_rate": 0.179,
-    "roc_auc": 0.85,
-    "pr_auc": 0.586,
-    "precision_top3_per_shift": 0.628,
+    "roc_auc": 0.862,
+    "pr_auc": 0.575,
+    "precision_top3_per_shift": 0.623,
+    "baseline_logreg_roc_auc": 0.85,
+    "baseline_logreg_precision_top3": 0.628,
     "baseline_rule_roc_auc": 0.812,
     "baseline_rule_precision_top3": 0.42
   },
-  "drivers": {
-    "standardscaler__operator_level": -1.13,
-    "standardscaler__qualified_backups": -0.753,
-    "onehotencoder__shift_early": -0.455,
-    "onehotencoder__zone_B": -0.352,
-    "standardscaler__zone_trainees": 0.319,
-    "onehotencoder__day_of_week_Friday": 0.271,
-    "onehotencoder__day_of_week_Thursday": -0.254,
-    "onehotencoder__day_of_week_Wednesday": -0.237
+  "importances": {
+    "passthrough__operator_level": 0.616,
+    "passthrough__qualified_backups": 0.15,
+    "passthrough__zone_trainees": 0.102,
+    "passthrough__crew_trainees": 0.036,
+    "passthrough__crew_overtime_h_last_week": 0.035,
+    "passthrough__zone_absence_rate_4w": 0.021,
+    "onehotencoder__day_of_week_Friday": 0.006,
+    "onehotencoder__shift_night": 0.006
   },
   "limits": "Synthetic data. In production, retrain on the plant's own roster and qualification history.",
   "must_not_be_used_for": "rating, ranking or predicting individual workers"

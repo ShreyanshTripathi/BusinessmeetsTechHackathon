@@ -40,6 +40,21 @@ template handover; everything else works the same.
 | `SHIFTLOOP_SUMMARY_MODEL` | `claude-haiku-4-5` | shift handover |
 | `SHIFTLOOP_OFFLINE=1` | unset | force offline mode |
 
+### ML models (random forests)
+
+The backend loads the three random forests from `ml/models/` at startup (see [ml/README.md](ml/README.md)):
+
+| Agent | What the forest adds | When |
+|---|---|---|
+| Staffing | Which staffed stations may lose qualified cover this shift | shift start, then hourly |
+| Assembly | Which zones may miss today's output target | every 30 min |
+| Fire & Safety | How serious a reported near miss could have been (Safety page form; one scripted report at 11:10) | on report |
+
+Each prediction carries its drivers and a plain-language explanation. Forecasts reach the inbox only at 80%+
+risk; lower ones appear under **Model forecasts** on the Now page. With Claude available, incident cards get an
+**Explain with Claude** button. `/api/health` shows whether the models loaded; if they are missing, the agents
+run rules-only. `SHIFTLOOP_ML=0` turns the models off; `SHIFTLOOP_ML_DIR` points to another `ml/` folder.
+
 ### Vision models
 
 Camera frames can be posted to `POST /api/vision/{camera_id}` (multipart `image`). Each camera purpose has a

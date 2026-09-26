@@ -12,6 +12,7 @@ from ..models import Event
 from ..state import FactoryState
 from .base import BaseAgent
 
+FORECAST_EVERY = timedelta(minutes=60)
 EXPIRY_WARNING_DAYS = 7
 HOURS_WARN = 9.5
 HOURS_MAX = 10.0
@@ -20,8 +21,20 @@ HOURS_MAX = 10.0
 class StaffingAgent(BaseAgent):
     name = "staffing"
 
+    def __init__(self, forecaster=None) -> None:
+        super().__init__()
+        self.forecaster = forecaster  # ml_bridge.MLBridge: random-forest cover-risk forecast
+        self._forecast: list[dict] = []
+        self._forecast_at = None
+
     def tick(self, state: FactoryState) -> list[Event]:
-        return self._sync(state, self._conditions(state))
+        conds = self._conditions(state)
+        if self.forecaster is not None:
+            if self._forecast_at is None or state.now - self._forecast_at >= FORECAST_EVERY:
+                self._forecast = self.forecaster.staffing_forecast(state)
+                self._forecast_at = state.now
+            conds += [self.forecast_condition(state, ml, key=f"forecast:{ml['station']}") for ml in self._forecast]
+        return self._sync(state, conds)
 
     def _conditions(self, state: FactoryState) -> list[Event]:
         conds: list[Event] = []

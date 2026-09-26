@@ -1,8 +1,10 @@
 """Staffing model: the day before a shift, which stations are likely to end up without qualified cover?
 
-Small and explainable on purpose: a logistic regression on 11 roster-level features. The supervisor sees
-a risk per station plus the reasons (coefficients), and can act early: pair a trainee, book a floater,
-plan cross-training. Rules in backend/shiftloop/agents/staffing.py still handle the live shift.
+A random forest on 11 roster-level features. It picks up interactions a linear model misses (a trainee
+matters much more when the zone also has no qualified floater). Each prediction comes with its drivers
+(drivers.py), and explain.py turns them into plain language for the supervisor. The logistic regression it
+replaced is still trained as a baseline, so the card shows whether the forest earns its place.
+Rules in backend/shiftloop/agents/staffing.py still handle the live shift.
 
 Run generate_staffing_data.py first.
 """
@@ -12,12 +14,14 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.compose import make_column_transformer
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, roc_auc_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from common import DATA_DIR, MODEL_DIR, save_card
+from drivers import reference_values
 
 CATEGORICAL = ["zone", "shift", "day_of_week"]
 NUMERIC = ["safety_critical", "operator_level", "qualified_backups", "zone_trainees", "crew_trainees",
@@ -33,56 +37,78 @@ def precision_at_top(df: pd.DataFrame, scores: np.ndarray, k: int = 3) -> float:
     return float(top["gap"].mean())
 
 
-def main() -> None:
-    df = pd.read_csv(DATA_DIR / "staffing_shifts.csv")
-    train, test = df[df.date < TEST_FROM], df[df.date >= TEST_FROM]
+def build_model():
+    return make_pipeline(
+        make_column_transformer(
+            (OneHotEncoder(handle_unknown="ignore"), CATEGORICAL),
+            ("passthrough", NUMERIC),
+        ),
+        # settings chosen on an August validation split (train Mar-Jul), before looking at September
+        RandomForestClassifier(n_estimators=300, min_samples_leaf=100, max_features=0.5,
+                               class_weight="balanced_subsample", n_jobs=-1, random_state=42),
+    )
 
-    model = make_pipeline(
+
+def build_baseline():
+    """The logistic regression this forest replaced; kept to compare against."""
+    return make_pipeline(
         make_column_transformer(
             (OneHotEncoder(handle_unknown="ignore"), CATEGORICAL),
             (StandardScaler(), NUMERIC),
         ),
         LogisticRegression(max_iter=1000, class_weight="balanced"),
     )
-    model.fit(train[FEATURES], train["gap"])
-    p = model.predict_proba(test[FEATURES])[:, 1]
 
-    # Baseline: the rule a supervisor might use today
+
+def evaluate(df: pd.DataFrame) -> dict:
+    train, test = df[df.date < TEST_FROM], df[df.date >= TEST_FROM]
+    p = build_model().fit(train[FEATURES], train["gap"]).predict_proba(test[FEATURES])[:, 1]
+    lr = build_baseline().fit(train[FEATURES], train["gap"]).predict_proba(test[FEATURES])[:, 1]
+    # the rule a supervisor might use today
     rule = ((test.operator_level < 2) | (test.qualified_backups == 0)).astype(float).to_numpy()
-
-    metrics = {
+    tie_break = np.random.default_rng(0).random(len(rule)) * 1e-3
+    return {
         "test_rows": int(len(test)),
         "test_gap_rate": round(float(test.gap.mean()), 3),
         "roc_auc": round(roc_auc_score(test.gap, p), 3),
         "pr_auc": round(average_precision_score(test.gap, p), 3),
         "precision_top3_per_shift": round(precision_at_top(test, p), 3),
+        "baseline_logreg_roc_auc": round(roc_auc_score(test.gap, lr), 3),
+        "baseline_logreg_precision_top3": round(precision_at_top(test, lr), 3),
         "baseline_rule_roc_auc": round(roc_auc_score(test.gap, rule), 3),
-        "baseline_rule_precision_top3": round(precision_at_top(test, rule + np.random.default_rng(0).random(len(rule)) * 1e-3), 3),
+        "baseline_rule_precision_top3": round(precision_at_top(test, rule + tie_break), 3),
     }
-    print(f"Trained on {len(train):,} station-shifts (Mar-Aug), tested on {len(test):,} (September)\n")
+
+
+def main() -> None:
+    df = pd.read_csv(DATA_DIR / "staffing_shifts.csv")
+    metrics = evaluate(df)
+    n_train = int((df.date < TEST_FROM).sum())
+    print(f"Trained on {n_train:,} station-shifts (Mar-Aug), tested on {metrics['test_rows']:,} (September)\n")
     for k, v in metrics.items():
         print(f"  {k:32s} {v}")
 
-    # Refit on everything and explain the drivers
-    model.fit(df[FEATURES], df["gap"])
+    # Refit on everything; overall drivers = which inputs the forest leans on most
+    model = build_model().fit(df[FEATURES], df["gap"])
     names = model[0].get_feature_names_out()
-    coefs = model[-1].coef_[0]
-    drivers = sorted(zip(names, coefs), key=lambda t: -abs(t[1]))[:8]
-    print("\nStrongest drivers (standardised coefficient, + means more risk):")
-    for n, c in drivers:
-        print(f"  {n:40s} {c:+.2f}")
+    importances = sorted(zip(names, model[-1].feature_importances_), key=lambda t: -t[1])[:8]
+    print("\nWhat the forest leans on most (impurity importance):")
+    for n, v in importances:
+        print(f"  {n:40s} {v:.3f}")
 
     joblib.dump(model, MODEL_DIR / "staffing_model.joblib")
     save_card("staffing_model", {
         "predicts": "probability that a station ends the shift without qualified cover (gap)",
         "used_by": "staffing agent, the day before the shift",
-        "algorithm": "logistic regression (scikit-learn), balanced classes",
+        "algorithm": "random forest (scikit-learn), 300 trees, min 100 station-shifts per leaf, 50% of features per split, balanced classes; settings chosen on August validation",
+        "explanations": "per prediction: drivers.tabular_drivers against reference_values; plain language: explain.py",
         "data": "synthetic: ml/generate_staffing_data.py, 26 weeks x 3 crews x 24 stations, Giga Berlin 2026 ramp",
         "features": FEATURES,
+        "reference_values": reference_values(df, FEATURES),
         "not_used": "no names, no individual absence history, no performance data",
         "split": f"train before {TEST_FROM}, test from {TEST_FROM}",
         "metrics": metrics,
-        "drivers": {n: round(float(c), 3) for n, c in drivers},
+        "importances": {n: round(float(v), 3) for n, v in importances},
         "limits": "Synthetic data. In production, retrain on the plant's own roster and qualification history.",
         "must_not_be_used_for": "rating, ranking or predicting individual workers",
     })

@@ -10,6 +10,9 @@ dependencies = [
     "anthropic>=0.60",
     "python-multipart>=0.0.9",
     "pillow>=10.0",
+    "scikit-learn==1.7.0",
+    "pandas>=3.0.6",
+    "joblib>=1.6.0",
 ]
 
 [project.optional-dependencies]

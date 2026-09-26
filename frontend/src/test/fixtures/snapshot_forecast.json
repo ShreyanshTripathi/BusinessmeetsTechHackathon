@@ -1,5 +1,5 @@
 {
- "clock": "2026-10-01T06:02:00",
+ "clock": "2026-10-01T09:06:00",
  "sim": {
   "running": false,
   "speed": 2.0,
@@ -16,9 +16,8 @@
   {
    "id": "A",
    "name": "Zone A",
-   "people": 9,
+   "people": 7,
    "fire_wardens": [
-    "Jan Kowalski",
     "Anna Nowak"
    ],
    "first_aiders": [
@@ -37,7 +36,7 @@
      "warn": 2.0,
      "crit": 4.0,
      "station": null,
-     "value": 0.17
+     "value": 0.29
     },
     {
      "id": "HEAT-A",
@@ -46,7 +45,7 @@
      "warn": 40.0,
      "crit": 57.0,
      "station": null,
-     "value": 24.12
+     "value": 23.81
     },
     {
      "id": "GAS-A",
@@ -55,16 +54,18 @@
      "warn": 30.0,
      "crit": 100.0,
      "station": null,
-     "value": 4.7
+     "value": 4.61
     }
    ],
-   "alert": null
+   "alert": "low"
   },
   {
    "id": "B",
    "name": "Zone B",
-   "people": 7,
-   "fire_wardens": [],
+   "people": 8,
+   "fire_wardens": [
+    "Jan Kowalski"
+   ],
    "first_aiders": [
     "Zofia Lewandowska"
    ],
@@ -81,7 +82,7 @@
      "warn": 2.0,
      "crit": 4.0,
      "station": null,
-     "value": 0.21
+     "value": 0.2
     },
     {
      "id": "HEAT-B",
@@ -90,7 +91,7 @@
      "warn": 40.0,
      "crit": 57.0,
      "station": null,
-     "value": 24.74
+     "value": 24.06
     },
     {
      "id": "GAS-B",
@@ -99,7 +100,7 @@
      "warn": 30.0,
      "crit": 100.0,
      "station": null,
-     "value": 5.12
+     "value": 3.56
     }
    ],
    "alert": "high"
@@ -127,7 +128,7 @@
      "warn": 2.0,
      "crit": 4.0,
      "station": null,
-     "value": 0.23
+     "value": 0.08
     },
     {
      "id": "HEAT-C",
@@ -136,7 +137,7 @@
      "warn": 40.0,
      "crit": 57.0,
      "station": null,
-     "value": 24.6
+     "value": 24.24
     },
     {
      "id": "GAS-C",
@@ -145,7 +146,7 @@
      "warn": 30.0,
      "crit": 100.0,
      "station": null,
-     "value": 4.49
+     "value": 5.67
     },
     {
      "id": "BT-S18",
@@ -154,7 +155,7 @@
      "warn": 45.0,
      "crit": 60.0,
      "station": "S18",
-     "value": 30.88
+     "value": 30.83
     }
    ],
    "alert": "low"
@@ -182,7 +183,7 @@
      "warn": 2.0,
      "crit": 4.0,
      "station": null,
-     "value": 0.11
+     "value": 0.27
     },
     {
      "id": "HEAT-D",
@@ -191,7 +192,7 @@
      "warn": 40.0,
      "crit": 57.0,
      "station": null,
-     "value": 24.15
+     "value": 24.69
     },
     {
      "id": "GAS-D",
@@ -200,7 +201,7 @@
      "warn": 30.0,
      "crit": 100.0,
      "station": null,
-     "value": 5.23
+     "value": 3.7
     }
    ],
    "alert": "low"
@@ -218,7 +219,7 @@
     "name": "Lena Schmidt",
     "level": 3
    },
-   "cycle_time_s": 60.3,
+   "cycle_time_s": 61.2,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -231,11 +232,11 @@
    "status": "running",
    "safety_critical": false,
    "operator": {
-    "id": "W002",
-    "name": "Jan Kowalski",
+    "id": "W025",
+    "name": "Paul Richter",
     "level": 2
    },
-   "cycle_time_s": 64.5,
+   "cycle_time_s": 55.8,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -252,11 +253,11 @@
     "name": "Ahmed Yilmaz",
     "level": 2
    },
-   "cycle_time_s": 59.3,
+   "cycle_time_s": 60.2,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
-   "alert": null
+   "alert": "low"
   },
   {
    "id": "S04",
@@ -269,7 +270,7 @@
     "name": "Anna Nowak",
     "level": 3
    },
-   "cycle_time_s": 57.0,
+   "cycle_time_s": 56.8,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -286,7 +287,7 @@
     "name": "Lukas Weber",
     "level": 2
    },
-   "cycle_time_s": 62.8,
+   "cycle_time_s": 60.4,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -303,7 +304,7 @@
     "name": "Marta Wi\u015bniewska",
     "level": 3
    },
-   "cycle_time_s": 60.9,
+   "cycle_time_s": 60.4,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -320,7 +321,7 @@
     "name": "Felix Braun",
     "level": 2
    },
-   "cycle_time_s": 58.9,
+   "cycle_time_s": 62.6,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -337,7 +338,7 @@
     "name": "Olga Petrenko",
     "level": 2
    },
-   "cycle_time_s": 64.0,
+   "cycle_time_s": 60.1,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -350,15 +351,15 @@
    "status": "running",
    "safety_critical": false,
    "operator": {
-    "id": "W009",
-    "name": "Tobias Klein",
-    "level": 3
+    "id": "W026",
+    "name": "Aylin \u00d6zt\u00fcrk",
+    "level": 1
    },
-   "cycle_time_s": 62.7,
+   "cycle_time_s": 62.6,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
-   "alert": null
+   "alert": "medium"
   },
   {
    "id": "S10",
@@ -371,7 +372,7 @@
     "name": "Zofia Lewandowska",
     "level": 3
    },
-   "cycle_time_s": 62.8,
+   "cycle_time_s": 59.8,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -388,7 +389,7 @@
     "name": "Mehmet Demir",
     "level": 2
    },
-   "cycle_time_s": 57.6,
+   "cycle_time_s": 60.9,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -398,10 +399,14 @@
    "id": "S12",
    "zone": "B",
    "name": "Underbody torque",
-   "status": "starved",
+   "status": "running",
    "safety_critical": false,
-   "operator": null,
-   "cycle_time_s": 0.0,
+   "operator": {
+    "id": "W027",
+    "name": "Micha\u0142 Szyma\u0144ski",
+    "level": 3
+   },
+   "cycle_time_s": 62.1,
    "takt_s": 60.0,
    "downtime_min": 2.0,
    "defects": 0,
@@ -418,7 +423,7 @@
     "name": "Piotr Zieli\u0144ski",
     "level": 2
    },
-   "cycle_time_s": 60.4,
+   "cycle_time_s": 60.6,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -435,7 +440,7 @@
     "name": "Julia Wagner",
     "level": 3
    },
-   "cycle_time_s": 57.4,
+   "cycle_time_s": 60.9,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -452,7 +457,7 @@
     "name": "Karim Haddad",
     "level": 2
    },
-   "cycle_time_s": 61.5,
+   "cycle_time_s": 60.5,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -469,7 +474,7 @@
     "name": "Katarzyna W\u00f3jcik",
     "level": 2
    },
-   "cycle_time_s": 61.2,
+   "cycle_time_s": 60.9,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -486,7 +491,7 @@
     "name": "Jonas Becker",
     "level": 2
    },
-   "cycle_time_s": 56.6,
+   "cycle_time_s": 57.9,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -503,7 +508,7 @@
     "name": "Elif Kaya",
     "level": 3
    },
-   "cycle_time_s": 60.4,
+   "cycle_time_s": 56.1,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -520,7 +525,7 @@
     "name": "Tomasz Kami\u0144ski",
     "level": 2
    },
-   "cycle_time_s": 58.5,
+   "cycle_time_s": 59.5,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -537,7 +542,7 @@
     "name": "Laura Fischer",
     "level": 3
    },
-   "cycle_time_s": 59.2,
+   "cycle_time_s": 59.5,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -554,7 +559,7 @@
     "name": "Nikolai Ivanov",
     "level": 3
    },
-   "cycle_time_s": 66.0,
+   "cycle_time_s": 60.8,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -571,11 +576,11 @@
     "name": "Hanna Schulz",
     "level": 2
    },
-   "cycle_time_s": 60.9,
+   "cycle_time_s": 58.1,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
-   "alert": "low"
+   "alert": null
   },
   {
    "id": "S23",
@@ -588,7 +593,7 @@
     "name": "Omar Saleh",
     "level": 2
    },
-   "cycle_time_s": 61.8,
+   "cycle_time_s": 56.8,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -605,7 +610,7 @@
     "name": "Agnieszka D\u0105browska",
     "level": 3
    },
-   "cycle_time_s": 61.4,
+   "cycle_time_s": 58.4,
    "takt_s": 60.0,
    "downtime_min": 0,
    "defects": 0,
@@ -615,106 +620,129 @@
  "incidents": {
   "active": [
    {
-    "id": "inc_0001",
-    "title": "S12 has no operator + station starved",
+    "id": "inc_0013",
+    "title": "Tool failure predicted at S12",
     "zone": "B",
     "stations": [
      "S12"
     ],
     "agents": [
-     "assembly",
-     "staffing"
+     "assembly"
     ],
     "severity": "high",
     "category": "production",
-    "confidence": 1.0,
-    "opened": "2026-10-01T06:00:00",
-    "updated": "2026-10-01T06:00:00",
-    "score": 115.0,
+    "confidence": 0.68,
+    "opened": "2026-10-01T08:51:00",
+    "updated": "2026-10-01T08:53:00",
+    "score": 86.8,
     "status": "open",
     "visibility": "active",
-    "likely_cause": "S12 is not staffed",
+    "likely_cause": null,
     "evidence": [
-     "S12 is waiting for parts or cars",
-     "No one present at S12 (Underbody torque)"
+     "torque spread 2.8x normal (0.58 vs 0.21 Nm)",
+     "mean torque 25.0 Nm (normal 25.0 Nm)",
+     "predicted failure: ~44 min"
     ],
     "recommendation": {
      "action": "keep_running",
      "scope": "station",
      "target": "S12",
-     "summary": "Cover S12",
+     "summary": "Tool failure predicted at S12",
      "steps": [
-      "Move Micha\u0142 Szyma\u0144ski to S12: trainer on S12, free, zone B, 0.0h worked"
+      "Send Bartosz Mazur (maintenance): swap the tool at S12 at the 09:30 break",
+      "Planned swap avoids an unplanned stop (failure expected in ~44 min)"
      ],
      "assignments": [
       {
-       "worker": "W027",
-       "worker_name": "Micha\u0142 Szyma\u0144ski",
-       "kind": "station",
-       "to_station": "S12",
-       "to_zone": null,
-       "task": "cover S12",
-       "reason": "trainer on S12, free, zone B, 0.0h worked"
+       "worker": "W033",
+       "worker_name": "Bartosz Mazur",
+       "kind": "relocate",
+       "to_station": null,
+       "to_zone": "B",
+       "task": "swap the tool at S12 at the 09:30 break",
+       "reason": "maintenance, free, in zone B (0 zone(s) away)"
       }
      ],
-     "escalations": [],
+     "escalations": [
+      "maintenance"
+     ],
      "hard_rule": null
     },
     "predictions": []
    },
    {
-    "id": "inc_0003",
-    "title": "No fire warden in zone B",
+    "id": "inc_0014",
+    "title": "Trainee without sign-off at S09 + cover risk",
     "zone": "B",
-    "stations": [],
+    "stations": [
+     "S09"
+    ],
     "agents": [
      "staffing"
     ],
-    "severity": "high",
+    "severity": "medium",
     "category": "staffing",
-    "confidence": 1.0,
-    "opened": "2026-10-01T06:00:00",
-    "updated": "2026-10-01T06:00:00",
-    "score": 70.0,
+    "confidence": 0.86,
+    "opened": "2026-10-01T09:00:00",
+    "updated": "2026-10-01T09:00:00",
+    "score": 38.6,
     "status": "open",
     "visibility": "active",
     "likely_cause": null,
     "evidence": [
-     "Zone B has no trained fire warden present"
+     "S09 (Front subframe) is run by a trainee (level 1)",
+     "86% risk of losing qualified cover this early shift",
+     "planned operator is a trainee (level 1)",
+     "0 qualified floater(s) for S09 on the crew",
+     "1 trainee(s) in zone B also need floaters",
+     "zone B absence rate last 4 weeks: 12%"
     ],
     "recommendation": {
      "action": "keep_running",
-     "scope": "zone",
-     "target": "B",
-     "summary": "Restore fire warden cover in zone B",
+     "scope": "station",
+     "target": "S09",
+     "summary": "Support the trainee at S09",
      "steps": [
-      "Move Jan Kowalski (fire warden) to zone B",
-      "Move Paul Richter to S02: qualified on S02, free, zone A, 0.0h worked"
+      "No qualified cover free for S09: ask the neighbouring section"
      ],
-     "assignments": [
-      {
-       "worker": "W002",
-       "worker_name": "Jan Kowalski",
-       "kind": "relocate",
-       "to_station": null,
-       "to_zone": "B",
-       "task": "fire warden cover for zone B",
-       "reason": "fire warden, zone A keeps 1 warden(s); S02 needs a backfill"
-      },
-      {
-       "worker": "W025",
-       "worker_name": "Paul Richter",
-       "kind": "station",
-       "to_station": "S02",
-       "to_zone": null,
-       "task": "backfill S02",
-       "reason": "qualified on S02, free, zone A, 0.0h worked"
-      }
-     ],
+     "assignments": [],
      "escalations": [],
      "hard_rule": null
     },
-    "predictions": []
+    "predictions": [
+     {
+      "event_id": "evt_0029",
+      "model": "staffing_model",
+      "risk": 0.856,
+      "explanation": "86% risk of losing qualified cover this early shift. Main reasons: operator level is 1 (usually 2), +23 points; qualified backups is 0 (usually 2), +15 points; crew trainees is 1 (usually 4), -3 points. Suggested: Line up a qualified backup now, before the gap happens.",
+      "drivers": [
+       {
+        "feature": "operator_level",
+        "value": 1,
+        "typical": 2,
+        "effect": 0.231
+       },
+       {
+        "feature": "qualified_backups",
+        "value": 0,
+        "typical": 2,
+        "effect": 0.153
+       },
+       {
+        "feature": "crew_trainees",
+        "value": 1,
+        "typical": 4,
+        "effect": -0.031
+       },
+       {
+        "feature": "crew_overtime_h_last_week",
+        "value": 4.0,
+        "typical": 2.45,
+        "effect": 0.019
+       }
+      ]
+     }
+    ]
    }
   ],
   "held": [
@@ -827,37 +855,37 @@
     ]
    },
    {
-    "id": "inc_0005",
-    "title": "S22 may lose qualified cover this shift",
-    "zone": "D",
+    "id": "inc_0015",
+    "title": "S03 may lose qualified cover this shift",
+    "zone": "A",
     "stations": [
-     "S22"
+     "S03"
     ],
     "agents": [
      "staffing"
     ],
     "severity": "low",
     "category": "staffing",
-    "confidence": 0.6,
-    "opened": "2026-10-01T06:00:00",
-    "updated": "2026-10-01T06:00:00",
-    "score": 16.0,
+    "confidence": 0.63,
+    "opened": "2026-10-01T09:00:00",
+    "updated": "2026-10-01T09:00:00",
+    "score": 16.3,
     "status": "open",
     "visibility": "held",
     "likely_cause": null,
     "evidence": [
-     "60% risk of losing qualified cover this early shift",
-     "0 qualified floater(s) for S22 on the crew",
-     "zone D absence rate last 4 weeks: 12%"
+     "63% risk of losing qualified cover this early shift",
+     "0 qualified floater(s) for S03 on the crew",
+     "zone A absence rate last 4 weeks: 11%"
     ],
     "recommendation": {
      "action": "keep_running",
      "scope": "station",
-     "target": "S22",
-     "summary": "Prepare cover for S22 before a gap opens",
+     "target": "S03",
+     "summary": "Prepare cover for S03 before a gap opens",
      "steps": [
-      "No free qualified backup for S22: plan cross-training this week",
-      "60% risk of losing qualified cover this early shift"
+      "No free qualified backup for S03: plan cross-training this week",
+      "63% risk of losing qualified cover this early shift"
      ],
      "assignments": [],
      "escalations": [],
@@ -865,164 +893,34 @@
     },
     "predictions": [
      {
-      "event_id": "evt_0006",
+      "event_id": "evt_0030",
       "model": "staffing_model",
-      "risk": 0.603,
-      "explanation": "60% risk of losing qualified cover this early shift. Main reasons: qualified backups is 0 (usually 2), +51 points; zone trainees is 0 (usually 1), -3 points; zone is D (usually A), -3 points. Suggested: Line up a qualified backup now, before the gap happens.",
+      "risk": 0.635,
+      "explanation": "63% risk of losing qualified cover this early shift. Main reasons: qualified backups is 0 (usually 2), +55 points; zone trainees is 0 (usually 1), -3 points; zone absence rate 4w is 0.11 (usually 0.141), +1 points. Suggested: Line up a qualified backup now, before the gap happens.",
       "drivers": [
        {
         "feature": "qualified_backups",
         "value": 0,
         "typical": 2,
-        "effect": 0.512
+        "effect": 0.547
        },
        {
         "feature": "zone_trainees",
         "value": 0,
         "typical": 1,
-        "effect": -0.03
-       },
-       {
-        "feature": "zone",
-        "value": "D",
-        "typical": "A",
-        "effect": -0.028
+        "effect": -0.032
        },
        {
         "feature": "zone_absence_rate_4w",
-        "value": 0.12,
+        "value": 0.11,
         "typical": 0.141,
-        "effect": 0.013
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "id": "inc_0006",
-    "title": "Zone B may miss its output target",
-    "zone": "B",
-    "stations": [],
-    "agents": [
-     "assembly"
-    ],
-    "severity": "low",
-    "category": "production",
-    "confidence": 0.58,
-    "opened": "2026-10-01T06:00:00",
-    "updated": "2026-10-01T06:00:00",
-    "score": 15.8,
-    "status": "open",
-    "visibility": "held",
-    "likely_cause": null,
-    "evidence": [
-     "58% risk that zone B misses today's output target",
-     "6 of 8 people present in zone B; flow blocked at S12",
-     "model trained on public garment-line data (stand-in until plant MES data)"
-    ],
-    "recommendation": {
-     "action": "keep_running",
-     "scope": "zone",
-     "target": "B",
-     "summary": "Protect zone B's output target",
-     "steps": [
-      "58% risk that zone B misses today's output target",
-      "6 of 8 people present in zone B; flow blocked at S12",
-      "Check staffing and buffer in zone B before the next break"
-     ],
-     "assignments": [],
-     "escalations": [],
-     "hard_rule": null
-    },
-    "predictions": [
-     {
-      "event_id": "evt_0007",
-      "model": "assembly_model",
-      "risk": 0.576,
-      "explanation": "58% risk that zone B misses today's output target. Main reasons: buffer is low (usually normal), +21 points; day is Thursday (usually Wednesday), +7 points; people present is 6 (usually 8), -2 points. Suggested: Check staffing and buffer in zone B before the next break.",
-      "drivers": [
-       {
-        "feature": "buffer",
-        "value": "low",
-        "typical": "normal",
-        "effect": 0.207
+        "effect": 0.014
        },
        {
-        "feature": "day",
+        "feature": "day_of_week",
         "value": "Thursday",
-        "typical": "Wednesday",
-        "effect": 0.071
-       },
-       {
-        "feature": "people_present",
-        "value": 6,
-        "typical": 8,
-        "effect": -0.019
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "id": "inc_0007",
-    "title": "Zone D may miss its output target",
-    "zone": "D",
-    "stations": [],
-    "agents": [
-     "assembly"
-    ],
-    "severity": "low",
-    "category": "production",
-    "confidence": 0.53,
-    "opened": "2026-10-01T06:00:00",
-    "updated": "2026-10-01T06:00:00",
-    "score": 15.3,
-    "status": "open",
-    "visibility": "held",
-    "likely_cause": null,
-    "evidence": [
-     "53% risk that zone D misses today's output target",
-     "7 of 8 people present in zone D; flow blocked at S12",
-     "model trained on public garment-line data (stand-in until plant MES data)"
-    ],
-    "recommendation": {
-     "action": "keep_running",
-     "scope": "zone",
-     "target": "D",
-     "summary": "Protect zone D's output target",
-     "steps": [
-      "53% risk that zone D misses today's output target",
-      "7 of 8 people present in zone D; flow blocked at S12",
-      "Check staffing and buffer in zone D before the next break"
-     ],
-     "assignments": [],
-     "escalations": [],
-     "hard_rule": null
-    },
-    "predictions": [
-     {
-      "event_id": "evt_0008",
-      "model": "assembly_model",
-      "risk": 0.53,
-      "explanation": "53% risk that zone D misses today's output target. Main reasons: buffer is low (usually normal), +19 points; day is Thursday (usually Wednesday), +7 points; people present is 7 (usually 8), -1 points. Suggested: Check staffing and buffer in zone D before the next break.",
-      "drivers": [
-       {
-        "feature": "buffer",
-        "value": "low",
-        "typical": "normal",
-        "effect": 0.186
-       },
-       {
-        "feature": "day",
-        "value": "Thursday",
-        "typical": "Wednesday",
-        "effect": 0.072
-       },
-       {
-        "feature": "people_present",
-        "value": 7,
-        "typical": 8,
-        "effect": -0.008
+        "typical": "Friday",
+        "effect": 0.005
        }
       ]
      }
@@ -1032,6 +930,51 @@
   "in_progress": []
  },
  "notifications": [
+  {
+   "id": "ntf_0007",
+   "time": "2026-10-01T08:53:00",
+   "level": "warning",
+   "title": "Tool failure predicted at S12",
+   "body": "Tool failure predicted at S12",
+   "incident_id": "inc_0013",
+   "acknowledged": false
+  },
+  {
+   "id": "ntf_0006",
+   "time": "2026-10-01T08:41:00",
+   "level": "warning",
+   "title": "Tool failure predicted at S12",
+   "body": "Tool failure predicted at S12",
+   "incident_id": "inc_0012",
+   "acknowledged": false
+  },
+  {
+   "id": "ntf_0005",
+   "time": "2026-10-01T07:15:00",
+   "level": "warning",
+   "title": "Tool failure predicted at S05 + cover risk",
+   "body": "Tool failure predicted at S05 + cover risk",
+   "incident_id": "inc_0008",
+   "acknowledged": false
+  },
+  {
+   "id": "ntf_0004",
+   "time": "2026-10-01T07:07:00",
+   "level": "warning",
+   "title": "Tool failure predicted at S12",
+   "body": "Tool failure predicted at S12",
+   "incident_id": "inc_0011",
+   "acknowledged": false
+  },
+  {
+   "id": "ntf_0003",
+   "time": "2026-10-01T07:03:00",
+   "level": "warning",
+   "title": "Tool failure predicted at S12",
+   "body": "Tool failure predicted at S12",
+   "incident_id": "inc_0010",
+   "acknowledged": false
+  },
   {
    "id": "ntf_0002",
    "time": "2026-10-01T06:00:00",
@@ -1055,25 +998,28 @@
  "proposals": [],
  "emergency": null,
  "kpis": {
-  "time": "2026-10-01T06:02:00",
-  "cars_built": 0,
-  "plan": 2,
-  "output_pct": 0,
+  "time": "2026-10-01T09:06:00",
+  "cars_built": 184,
+  "plan": 186,
+  "output_pct": 99,
   "downtime_min": {
    "S12": 2.0
   },
   "downtime_total_min": 2.0,
   "defects": 0,
   "open_safety": 0,
-  "open_incidents": 7,
-  "impact": {}
+  "open_incidents": 5,
+  "impact": {
+   "downtime_avoided_min": 8.0,
+   "energy_saved_kwh": 12.0
+  }
  },
  "attention": {
-  "signals": 149,
-  "events": 8,
-  "incidents": 7,
+  "signals": 13583,
+  "events": 32,
+  "incidents": 15,
   "active": 2,
-  "held_back": 147
+  "held_back": 13581
  },
  "expert_queue": []
 }

@@ -5,6 +5,7 @@ import start from './test/fixtures/snapshot_start.json'
 import emergency from './test/fixtures/snapshot_emergency.json'
 import workers from './test/fixtures/workers.json'
 import oversight from './test/fixtures/oversight.json'
+import forecast from './test/fixtures/snapshot_forecast.json'
 
 const snap = { current: start as unknown }
 
@@ -27,6 +28,9 @@ vi.mock('./api', () => ({
     sim: vi.fn(),
     checkin: vi.fn(),
     allClear: vi.fn(),
+    explain: vi.fn().mockResolvedValue({ explanations: [] }),
+    reportNearMiss: vi.fn(),
+    models: vi.fn().mockResolvedValue({ models: [] }),
   },
 }))
 
@@ -94,4 +98,10 @@ test('emergency takes over Now and shows a banner in other sections', async () =
   expect(screen.getByRole('heading', { name: /emergency.*zone c/i })).toBeInTheDocument()
   await userEvent.click(within(nav()).getByRole('button', { name: /^Line/ }))
   expect(screen.getByRole('alert')).toHaveTextContent(/emergency in zone c/i)
+})
+
+test('Now shows model forecasts under the decisions', () => {
+  snap.current = forecast
+  render(<App />)
+  expect(screen.getByRole('list', { name: /model forecasts/i })).toBeInTheDocument()
 })

@@ -6,6 +6,7 @@ central intelligence. Run this file for a demo: python predict.py
 """
 from __future__ import annotations
 
+import json
 from functools import cache
 
 import joblib
@@ -13,6 +14,8 @@ import numpy as np
 import pandas as pd
 
 from common import MODEL_DIR
+from drivers import tabular_drivers, text_drivers
+from train_assembly import FEATURES as ASSEMBLY_FEATURES
 from train_safety import UNSURE_BELOW
 from train_staffing import FEATURES as STAFFING_FEATURES
 
@@ -20,6 +23,11 @@ from train_staffing import FEATURES as STAFFING_FEATURES
 @cache
 def _load(name: str):
     return joblib.load(MODEL_DIR / f"{name}.joblib")
+
+
+@cache
+def _card(name: str) -> dict:
+    return json.loads((MODEL_DIR / f"{name}.card.json").read_text())
 
 
 # --------------------------------------------------------------------------- staffing
@@ -30,12 +38,14 @@ def staffing_risk(stations: list[dict], top: int = 3, min_risk: float = 0.5) -> 
 
     Each dict needs the columns in train_staffing.FEATURES plus "station".
     """
+    model, ref = _load("staffing_model"), _card("staffing_model")["reference_values"]
     df = pd.DataFrame(stations)
-    df["risk"] = _load("staffing_model").predict_proba(df[STAFFING_FEATURES])[:, 1]
+    df["risk"] = model.predict_proba(df[STAFFING_FEATURES])[:, 1]
     events = []
     for r in df.sort_values("risk", ascending=False).head(top).itertuples():
         if r.risk < min_risk:
             continue
+        drivers = tabular_drivers(model, df.loc[r.Index].to_dict(), STAFFING_FEATURES, ref)
         why = []
         if r.operator_level < 2:
             why.append(f"planned operator is a trainee (level {r.operator_level})")
@@ -48,7 +58,7 @@ def staffing_risk(stations: list[dict], top: int = 3, min_risk: float = 0.5) -> 
             "severity": "high" if r.risk >= 0.75 else "medium", "confidence": round(float(r.risk), 2),
             "evidence": [f"{r.risk:.0%} risk of no qualified cover on the {r.shift} shift"] + why,
             "suggested_action": "Book a qualified floater or plan cross-training for this station",
-            "data": {"risk": round(float(r.risk), 3), "model": "staffing_model"},
+            "data": {"risk": round(float(r.risk), 3), "model": "staffing_model", "drivers": drivers},
         })
     return events
 
@@ -58,7 +68,9 @@ def staffing_risk(stations: list[dict], top: int = 3, min_risk: float = 0.5) -> 
 
 def assembly_risk(team_day: dict, zone: str) -> dict:
     """Risk that a line team misses today's output target (columns from train_assembly.FEATURES)."""
-    p = float(_load("assembly_model").predict_proba(pd.DataFrame([team_day]))[0, 1])
+    model = _load("assembly_model")
+    p = float(model.predict_proba(pd.DataFrame([team_day])[ASSEMBLY_FEATURES])[0, 1])
+    drivers = tabular_drivers(model, team_day, ASSEMBLY_FEATURES, _card("assembly_model")["reference_values"])
     return {
         "agent": "assembly", "type": "output_target_risk", "zone": zone, "station": None,
         "severity": "high" if p >= 0.7 else "medium" if p >= 0.5 else "low", "confidence": round(p, 2),
@@ -66,19 +78,11 @@ def assembly_risk(team_day: dict, zone: str) -> dict:
                      f"{team_day['no_of_workers']} people, {team_day['wip']} units in buffer, "
                      f"{team_day['no_of_style_change']} product change(s)"],
         "suggested_action": "Check staffing and buffer before the first break" if p >= 0.5 else "No action",
-        "data": {"risk": round(p, 3), "model": "assembly_model"},
+        "data": {"risk": round(p, 3), "model": "assembly_model", "drivers": drivers},
     }
 
 
 # --------------------------------------------------------------------------- safety
-
-
-def _top_terms(model, text: str, cls: str, n: int = 4) -> list[str]:
-    tfidf, clf = model[0], model[-1]
-    vec = tfidf.transform([text]).toarray()[0]
-    contrib = vec * clf.coef_[list(clf.classes_).index(cls)]
-    idx = [i for i in np.argsort(contrib)[::-1][:n] if contrib[i] > 0]
-    return list(tfidf.get_feature_names_out()[idx])
 
 
 def safety_triage(report: str, zone: str, station: str | None = None) -> dict:
@@ -88,7 +92,8 @@ def safety_triage(report: str, zone: str, station: str | None = None) -> dict:
     cls = model.classes_[proba.argmax()]
     conf = float(proba.max())
     unsure = conf < UNSURE_BELOW
-    terms = _top_terms(model, report, cls)
+    drivers = text_drivers(model, report, cls)
+    terms = [d["word"] for d in drivers]
     return {
         "agent": "safety", "type": "near_miss_unsure" if unsure else "near_miss_rated",
         "zone": zone, "station": station, "severity": "low" if unsure else cls, "confidence": round(conf, 2),
@@ -96,7 +101,8 @@ def safety_triage(report: str, zone: str, station: str | None = None) -> dict:
                      "key words: " + (", ".join(terms) if terms else "none")],
         "suggested_action": "Safety expert rates this report" if unsure
         else "Review the station method with the engineer" if cls == "high" else "Log and track",
-        "data": {"probabilities": dict(zip(model.classes_, np.round(proba, 3).tolist())), "model": "safety_model"},
+        "data": {"probabilities": dict(zip(model.classes_, np.round(proba, 3).tolist())), "model": "safety_model",
+                 "drivers": drivers},
     }
 
 
@@ -104,11 +110,18 @@ def safety_triage(report: str, zone: str, station: str | None = None) -> dict:
 
 
 def _print(event: dict) -> None:
+    from explain import explain
+
     where = event["station"] or f"zone {event['zone']}"
     print(f"[{event['agent']}] {event['type']} at {where}: {event['severity']} ({event['confidence']:.0%})")
     for e in event["evidence"]:
         print(f"    - {e}")
+    for d in event["data"].get("drivers", []):
+        name = d.get("feature") or f'"{d["word"]}"'
+        print(f"    driver {name:28s} {d['effect'] * 100:+.0f} points")
     print(f"    -> {event['suggested_action']}")
+    out = explain(event)
+    print(f"    explanation ({out['mode']}): {out['text']}\n")
 
 
 if __name__ == "__main__":

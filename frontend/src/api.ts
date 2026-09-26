@@ -1,4 +1,4 @@
-import type { Decision, Language, Oversight, Proposal, Snapshot, WhatIfResult, Worker } from './types'
+import type { Decision, Explanation, Incident, Language, ModelCard, Oversight, Proposal, Snapshot, WhatIfResult, Worker } from './types'
 
 async function request<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(path, {
@@ -52,4 +52,9 @@ export const api = {
   sim: (cmd: SimCommand) => request('/api/sim', cmd),
   checkin: (worker: string) => request('/api/emergency/checkin', { worker }),
   allClear: () => request<RestartPlan>('/api/emergency/all-clear', {}),
+  explain: (incidentId: string, language: Language = 'en') =>
+    request<{ explanations: Explanation[] }>(`/api/incidents/${incidentId}/explain`, { language }),
+  reportNearMiss: (text: string, zone: string, station: string | null) =>
+    request<{ event: unknown; incident: Incident }>('/api/safety/report', { text, zone, station }),
+  models: () => request<{ models: ModelCard[] }>('/api/models'),
 }

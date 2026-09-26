@@ -2,17 +2,18 @@
 from __future__ import annotations
 
 from ..models import Event, Incident
+from .fusion import LIVE_SAFETY_TYPES
 
 SEVERITY_POINTS = {"info": 0, "low": 10, "medium": 30, "high": 60, "critical": 100}
-SAFETY_BONUS = 1000  # hard rule: any safety incident outranks every non-safety incident
+SAFETY_BONUS = 1000  # hard rule: any live safety hazard outranks every other incident
 QUALITY_SPREAD_BONUS = 200
 
 
 def score(incident: Incident, events: list[Event]) -> float:
     s = SEVERITY_POINTS[incident.severity.value]
-    if incident.category == "safety":
-        s += SAFETY_BONUS
     types = {e.type for e in events}
+    if types & LIVE_SAFETY_TYPES:
+        s += SAFETY_BONUS  # reports of past near misses matter, but do not outrank a live line problem
     if any(e.data.get("spread_risk") for e in events):
         s += QUALITY_SPREAD_BONUS
     if "station_stopped" in types:
