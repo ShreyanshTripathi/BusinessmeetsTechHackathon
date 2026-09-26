@@ -1,0 +1,47 @@
+{
+  "model": "assembly_model",
+  "trained_at": "2026-09-26T02:47:25+00:00",
+  "predicts": "probability that a line team misses its output target today",
+  "used_by": "general assembly agent, at shift start and after a product change",
+  "algorithm": "random forest (scikit-learn), 300 trees",
+  "data": "UCI Productivity Prediction of Garment Employees, 1,197 team-days (public stand-in)",
+  "features": [
+    "department",
+    "day",
+    "team",
+    "targeted_productivity",
+    "smv",
+    "wip",
+    "over_time",
+    "no_of_style_change",
+    "no_of_workers"
+  ],
+  "excluded_leaky": [
+    "incentive",
+    "idle_time",
+    "idle_men",
+    "actual_productivity"
+  ],
+  "split": "train up to 2015-02-26, test after",
+  "metrics": {
+    "test_team_days": 233,
+    "test_miss_rate": 0.258,
+    "roc_auc": 0.77,
+    "miss_recall": 0.65,
+    "miss_precision": 0.433,
+    "accuracy": 0.691
+  },
+  "drivers": {
+    "no_of_workers": 0.103,
+    "wip": 0.101,
+    "smv": 0.007,
+    "team": 0.005,
+    "department": -0.002,
+    "targeted_productivity": -0.008,
+    "no_of_style_change": -0.008,
+    "day": -0.013,
+    "over_time": -0.025
+  },
+  "limits": "Garment data, not car assembly. Retrain on the plant's MES output per team and shift.",
+  "must_not_be_used_for": "rating individual workers; the unit is the team"
+}

@@ -1,0 +1,22 @@
+{
+  "model": "safety_model",
+  "trained_at": "2026-09-26T02:47:33+00:00",
+  "predicts": "potential severity of an incident / near-miss report: low (I-II), medium (III), high (IV-VI)",
+  "used_by": "fire & safety agent, when a report is filed",
+  "algorithm": "TF-IDF word and word-pair features + logistic regression (scikit-learn)",
+  "data": "IHM Stefanini industrial safety database (Kaggle), 425 reports, mining and metals plants",
+  "target_note": "potential level, not actual level: how bad it could have been",
+  "unsure_rule": "max class probability below 0.5 -> safety expert review",
+  "split": "5-fold stratified cross-validation",
+  "metrics": {
+    "reports": 425,
+    "accuracy": 0.536,
+    "high_recall": 0.646,
+    "high_precision": 0.604,
+    "high_missed_as_low": 0.166,
+    "unsure_share": 0.496,
+    "accuracy_when_sure": 0.607
+  },
+  "limits": "Small public dataset from other industries. Retrain on the plant's own reports before real use.",
+  "must_not_be_used_for": "blaming individuals; the report text is about the event, not the person"
+}

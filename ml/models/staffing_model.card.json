@@ -1,0 +1,44 @@
+{
+  "model": "staffing_model",
+  "trained_at": "2026-09-26T02:47:16+00:00",
+  "predicts": "probability that a station ends the shift without qualified cover (gap)",
+  "used_by": "staffing agent, the day before the shift",
+  "algorithm": "logistic regression (scikit-learn), balanced classes",
+  "data": "synthetic: ml/generate_staffing_data.py, 26 weeks x 3 crews x 24 stations, Giga Berlin 2026 ramp",
+  "features": [
+    "zone",
+    "shift",
+    "day_of_week",
+    "safety_critical",
+    "operator_level",
+    "qualified_backups",
+    "zone_trainees",
+    "crew_trainees",
+    "zone_floaters",
+    "zone_absence_rate_4w",
+    "crew_overtime_h_last_week"
+  ],
+  "not_used": "no names, no individual absence history, no performance data",
+  "split": "train before 2026-09-01, test from 2026-09-01",
+  "metrics": {
+    "test_rows": 1656,
+    "test_gap_rate": 0.179,
+    "roc_auc": 0.85,
+    "pr_auc": 0.586,
+    "precision_top3_per_shift": 0.628,
+    "baseline_rule_roc_auc": 0.812,
+    "baseline_rule_precision_top3": 0.42
+  },
+  "drivers": {
+    "standardscaler__operator_level": -1.13,
+    "standardscaler__qualified_backups": -0.753,
+    "onehotencoder__shift_early": -0.455,
+    "onehotencoder__zone_B": -0.352,
+    "standardscaler__zone_trainees": 0.319,
+    "onehotencoder__day_of_week_Friday": 0.271,
+    "onehotencoder__day_of_week_Thursday": -0.254,
+    "onehotencoder__day_of_week_Wednesday": -0.237
+  },
+  "limits": "Synthetic data. In production, retrain on the plant's own roster and qualification history.",
+  "must_not_be_used_for": "rating, ranking or predicting individual workers"
+}
