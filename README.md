@@ -121,6 +121,24 @@ cd frontend && npm test            # components against real snapshot fixtures
 Frontend fixtures in `frontend/src/test/fixtures/` are generated from the real backend; regenerate them if the
 snapshot format changes.
 
+## Architecture
+
+![AI for Factories: a central decision-making brain feeds the dashboard and voice alerts; below it, one specialist model per factory function. Staffing, General assembly line and Fire and safety are built in the MVP; Casting, Plastics and Support are later phases.](ai_for_factories_architecture.png)
+
+The design is modular: every factory function gets its own specialist, and the central brain above them stays
+the same.
+
+- **One specialist per function.** The MVP covers Staffing, General assembly line and Fire and safety. Casting,
+  Plastics and Support are planned as later phases.
+- **One shared event format.** Every specialist reports its findings the same way, so adding a function means
+  adding one agent. Merging, ranking, recommendations, the dashboard and the voice alerts need no changes.
+- **Models can be swapped per function.** A specialist's model can be replaced or upgraded on its own, for
+  example a camera model through its detector slot or the random forests through `SHIFTLOOP_ML_DIR`, without
+  touching the rest of the system.
+
+In the MVP the specialists use rules, statistics and random forests, and Claude powers the chat copilot and
+explanations. The function-specific LLMs in the diagram are the target architecture for later phases.
+
 ## Layout
 
 ```
@@ -146,9 +164,3 @@ frontend/src/
 Impact numbers (downtime avoided, energy saved, rework avoided) use documented constants in
 `backend/shiftloop/actions.py`. Takt is 60 s, breaks are at 09:30 and 12:00 (`central/recommend.py`), and the
 working-time limit is 10 h/day (`matching.py`).
-# BusinessmeetsTechHackathon
-<<<<<<< HEAD
-# BusinessmeetsTechHackathon
-=======
->>>>>>> 80f4fef125dfb9fa3f0c1b99a25a01a675cdd3b1
-# BusinessmeetsTechHackathon
