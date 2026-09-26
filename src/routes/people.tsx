@@ -52,7 +52,7 @@ function PeoplePage() {
           <Filter value={status} onChange={setStatus} label="Status" opts={["present", "break", "absent"]} />
           <Filter value={role} onChange={setRole} label="Role" opts={["operator", "floater", "maintenance", "team_lead"]} />
         </div>
-        {demo ? <Empty>Connect a backend to see the worker list.</Empty> : !workers ? <Empty>Loading people…</Empty> : list.length === 0 ? <Empty>No one matches these filters.</Empty> : (
+        {!workers ? <Empty>Loading people…</Empty> : list.length === 0 ? <Empty>No one matches these filters.</Empty> : (
           <div className="grid gap-2 md:grid-cols-2">
             {list.map((w) => <WorkerCard key={w.id} w={w} />)}
           </div>
