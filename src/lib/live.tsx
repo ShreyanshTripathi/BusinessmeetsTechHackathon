@@ -44,8 +44,8 @@ const VOICE_KEY = "shiftloop_voice";
 
 export function LiveProvider({ children }: { children: ReactNode }) {
   const [liveSnap, setLiveSnap] = useState<Snapshot | null>(null);
-  const [conn, setConn] = useState<ConnState>("connecting");
-  const [demo, setDemo] = useState(false);
+  const [conn, setConn] = useState<ConnState>(DEMO_ENABLED ? "demo" : "connecting");
+  const [demo, setDemo] = useState(DEMO_ENABLED);
   const [demoScenario, setDemoScenario] = useState<DemoScenario>("start");
   const [apiBase, setApiBaseState] = useState("");
   const [gen, setGen] = useState(0);
