@@ -5,11 +5,13 @@ import asyncio
 import contextlib
 import json
 import os
+from pathlib import Path
 from typing import Literal
 
 from fastapi import FastAPI, File, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, model_validator
 
 from ..factory import zone_of
@@ -113,7 +115,7 @@ class Runtime:
 
 
 def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, detectors: dict | None = None,
-               autostart: bool = True, scenario: str = "demo") -> FastAPI:
+               autostart: bool = True, scenario: str = "demo", static_dir: str | Path | None = None) -> FastAPI:
     plant = plant or Plant(scenario=scenario, ml=ml_enabled())
     rt = Runtime(plant, copilot or ChatCopilot(plant), detectors if detectors is not None else detectors_from_env(),
                  scenario)
@@ -308,14 +310,28 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
         except WebSocketDisconnect:
             rt.clients.discard(websocket)
 
-    return app
+    # ------------------------------------------------------------------ built dashboard (Docker / Render)
 
+    static_dir = static_dir or os.getenv("SHIFTLOOP_STATIC_DIR")
+    static = Path(static_dir).resolve() if static_dir else None
+    if static is not None and (static / "index.html").is_file():
+
+        @app.get("/{path:path}", include_in_schema=False)
+        async def dashboard(path: str):
+            if path == "api" or path.startswith("api/"):
+                raise HTTPException(404, "not found")
+            target = (static / path).resolve()
+            if path and target.is_file() and static in target.parents:
+                return FileResponse(target)
+            return FileResponse(static / "index.html")  # client-side routes
+
+    return app
 
 
 def main() -> None:
     import uvicorn
 
-    uvicorn.run("shiftloop.api.app:make_default", factory=True, host="0.0.0.0", port=8000)
+    uvicorn.run("shiftloop.api.app:make_default", factory=True, host="0.0.0.0", port=int(os.getenv("PORT", "8000")))
 
 
 def make_default() -> FastAPI:

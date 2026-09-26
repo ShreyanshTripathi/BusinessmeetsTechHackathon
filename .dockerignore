@@ -1,0 +1,14 @@
+# keep the build context small: dependencies are installed inside the image
+**/node_modules
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.DS_Store
+.git
+frontend/dist
+frontend~*
+backend/tests
+ml/tests
+ml/data
+convos
+roles

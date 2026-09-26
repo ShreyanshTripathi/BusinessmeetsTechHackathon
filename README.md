@@ -68,6 +68,22 @@ detector slot; empty slots return 503 and the simulator's scripted detections ar
 
 Detections under 50% confidence become *expert review* items instead of defects.
 
+## Deploy on Render (Docker)
+
+One container serves the API, the WebSocket and the built dashboard (`Dockerfile` at the repo root).
+
+1. Push the repository to GitHub or GitLab. The trained models in `ml/models/` must be committed; the image copies them.
+2. In Render: **New → Blueprint** and pick the repository. `render.yaml` creates a Docker web service with a
+   health check on `/api/health`. (Or **New → Web Service**, runtime **Docker**, leave the Dockerfile path as is.)
+3. Optional: set `ANTHROPIC_API_KEY` in the service's environment for the Claude copilot and explanations.
+4. Open the service URL. The demo shift starts at 06:00.
+
+Things to know:
+- **One instance only.** The factory state lives in memory; don't scale out, and each deploy or restart starts the shift again.
+- **Free plan sleeps** after 15 minutes without traffic and restarts the shift on the next visit (first load takes
+  ~30–60 s). Use a paid plan for a live demo. The app uses about 160 MB of memory.
+- Build and run locally with Docker: `docker build -t shiftloop . && docker run -p 8000:8000 shiftloop`, then open http://localhost:8000.
+
 ## The demo shift
 
 | Time | What happens | What the system does |

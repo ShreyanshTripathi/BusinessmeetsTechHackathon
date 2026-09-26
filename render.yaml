@@ -1,0 +1,12 @@
+# Render Blueprint: New > Blueprint, point it at this repository.
+services:
+  - type: web
+    name: shiftloop
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free  # free instances sleep after 15 min idle and restart the demo shift; use starter for a live demo
+    healthCheckPath: /api/health
+    envVars:
+      - key: ANTHROPIC_API_KEY  # optional: without it the copilot and explanations run offline
+        sync: false
