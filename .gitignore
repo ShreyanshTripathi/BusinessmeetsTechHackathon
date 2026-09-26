@@ -6,3 +6,5 @@ frontend/node_modules/
 frontend/dist/
 ml/.venv/
 ml/__pycache__/
+frontend/
+frontend~80f4fef125dfb9fa3f0c1b99a25a01a675cdd3b1/
