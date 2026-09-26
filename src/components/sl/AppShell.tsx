@@ -15,6 +15,12 @@ const NAV = [
   { to: "/line", label: "Line" },
   { to: "/people", label: "People" },
 ] as const;
+const MENU = [
+  { to: "/alerts", label: "Notifications & expert queue" },
+  { to: "/handover", label: "Shift handover" },
+  { to: "/oversight", label: "Decision record" },
+  { to: "/settings", label: "Demo controls & backend" },
+] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { snap, conn, demo, demoScenario, setDemoScenario, applied, clearApplied, voiceOn, setVoiceOn, voiceAsked, act } = useLive();
@@ -62,8 +68,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <button aria-label="Menu" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md hover:bg-accent"><Menu className="h-6 w-6" /></button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                {[["/alerts", "Notifications & expert queue"], ["/handover", "Shift handover"], ["/oversight", "Decision record"], ["/settings", "Demo controls & backend"]].map(([to, l]) => (
-                  <DropdownMenuItem key={to} asChild className="min-h-11 text-base"><Link to={to}>{l}</Link></DropdownMenuItem>
+                {MENU.map((m) => (
+                  <DropdownMenuItem key={m.to} asChild className="min-h-11 text-base"><Link to={m.to}>{m.label}</Link></DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>

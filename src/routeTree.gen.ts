@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as HandoverRouteImport } from './routes/handover'
+import { Route as LineRouteImport } from './routes/line'
+import { Route as OversightRouteImport } from './routes/oversight'
+import { Route as PeopleRouteImport } from './routes/people'
+import { Route as SettingsRouteImport } from './routes/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HandoverRoute = HandoverRouteImport.update({
+  id: '/handover',
+  path: '/handover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LineRoute = LineRouteImport.update({
+  id: '/line',
+  path: '/line',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OversightRoute = OversightRouteImport.update({
+  id: '/oversight',
+  path: '/oversight',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PeopleRoute = PeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/handover': typeof HandoverRoute
+  '/line': typeof LineRoute
+  '/oversight': typeof OversightRoute
+  '/people': typeof PeopleRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/handover': typeof HandoverRoute
+  '/line': typeof LineRoute
+  '/oversight': typeof OversightRoute
+  '/people': typeof PeopleRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/handover': typeof HandoverRoute
+  '/line': typeof LineRoute
+  '/oversight': typeof OversightRoute
+  '/people': typeof PeopleRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/alerts'
+    | '/handover'
+    | '/line'
+    | '/oversight'
+    | '/people'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/alerts'
+    | '/handover'
+    | '/line'
+    | '/oversight'
+    | '/people'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/alerts'
+    | '/handover'
+    | '/line'
+    | '/oversight'
+    | '/people'
+    | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
+  HandoverRoute: typeof HandoverRoute
+  LineRoute: typeof LineRoute
+  OversightRoute: typeof OversightRoute
+  PeopleRoute: typeof PeopleRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/handover': {
+      id: '/handover'
+      path: '/handover'
+      fullPath: '/handover'
+      preLoaderRoute: typeof HandoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/line': {
+      id: '/line'
+      path: '/line'
+      fullPath: '/line'
+      preLoaderRoute: typeof LineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oversight': {
+      id: '/oversight'
+      path: '/oversight'
+      fullPath: '/oversight'
+      preLoaderRoute: typeof OversightRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/people': {
+      id: '/people'
+      path: '/people'
+      fullPath: '/people'
+      preLoaderRoute: typeof PeopleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsRoute: AlertsRoute,
+  HandoverRoute: HandoverRoute,
+  LineRoute: LineRoute,
+  OversightRoute: OversightRoute,
+  PeopleRoute: PeopleRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
