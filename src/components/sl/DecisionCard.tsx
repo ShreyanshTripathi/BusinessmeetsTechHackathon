@@ -9,7 +9,7 @@ import { ACTION_LABEL, ActBtn, agentLabel, Code, HARD_RULE_LABEL, SevBadge, sevB
 import { ReasonDialog } from "./ReasonDialog";
 import { ChangeSheet } from "./ChangeSheet";
 
-export function DecisionCard({ inc, clock, notifications, compact }: { inc: Incident; clock: string; notifications: Notification[]; compact?: boolean }) {
+export function DecisionCard({ inc, clock, notifications, compact, featured }: { inc: Incident; clock: string; notifications: Notification[]; compact?: boolean; featured?: boolean }) {
   const { act, showApplied } = useLive();
   const [open, setOpen] = useState(false);
   const [dismissOpen, setDismissOpen] = useState(false);
@@ -28,11 +28,12 @@ export function DecisionCard({ inc, clock, notifications, compact }: { inc: Inci
   };
 
   return (
-    <article className={cn("rounded-lg border border-border border-l-8 bg-card p-4 sm:p-5", sevBorder(inc.severity))}>
-      <header className="flex flex-wrap items-start gap-x-4 gap-y-2">
-        <div className="flex items-baseline gap-3">
-          <span className="font-display text-5xl font-bold leading-none">{inc.zone}</span>
-          <span className="font-display text-3xl font-bold leading-none">{inc.stations.join(" · ")}</span>
+    <article className={cn("border border-border border-l-4 bg-card p-5 sm:p-7", featured && "sm:p-9", sevBorder(inc.severity))}>
+      <header className="flex flex-wrap items-start gap-x-4 gap-y-3">
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-bold uppercase text-muted-foreground">Zone</span>
+          <span className="font-display text-3xl leading-none">{inc.zone}</span>
+          <span className="border-l border-border pl-3 text-2xl font-bold leading-none">{inc.stations.join(" · ")}</span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <SevBadge s={inc.severity} />
@@ -45,44 +46,44 @@ export function DecisionCard({ inc, clock, notifications, compact }: { inc: Inci
         </div>
         <div className="ml-auto text-right text-sm text-muted-foreground">
           <div>opened {hhmm(inc.opened)} · {minutesBetween(inc.opened, clock)} min ago</div>
-          <div className={cn("font-display text-lg", unsure && "text-medium")}>
+          <div className={cn("text-sm font-semibold", unsure && "text-high")}>
             {Math.round(inc.confidence * 100)}% confident{unsure && " · unsure"}
           </div>
         </div>
       </header>
 
-      <h3 className="mt-3 text-2xl font-semibold leading-snug">{inc.title}</h3>
-      {inc.likely_cause && <p className="mt-1 text-lg text-muted-foreground">Likely cause: {inc.likely_cause}</p>}
+      <h3 className={cn("mt-6 font-bold leading-tight", featured ? "text-3xl sm:text-4xl" : "text-2xl")}>{inc.title}</h3>
+      {inc.likely_cause && <p className="mt-3 text-lg text-muted-foreground">Likely cause: {inc.likely_cause}</p>}
 
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+      <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
         {inc.agents.map((a) => <span key={a} className="rounded-full bg-secondary px-3 py-1">{agentLabel(a)}</span>)}
         {inc.agents.length > 1 && <span className="font-semibold text-foreground">Cross-function finding</span>}
       </div>
 
       {rec ? (
-        <div className="mt-4 rounded-md bg-secondary/60 p-4">
+        <div className="mt-7 border-t border-border pt-6">
           <div className="flex flex-wrap items-baseline gap-3">
-            <span className="text-sm uppercase tracking-wider text-muted-foreground">AI recommends</span>
-            <span className={cn("font-display text-3xl font-bold", rec.action === "emergency" && "text-critical")}>
+            <span className="w-full text-sm font-bold uppercase text-muted-foreground">AI recommends</span>
+            <span className={cn("text-2xl font-bold sm:text-3xl", rec.action === "emergency" && "text-critical")}>
               {ACTION_LABEL[rec.action] ?? rec.action}
             </span>
-            {where && <span className="font-display text-3xl font-bold">{where}</span>}
+            {where && <span className="text-2xl font-bold sm:text-3xl">{where}</span>}
           </div>
-          <p className="mt-1 text-lg">{rec.summary}</p>
+          <p className="mt-3 text-lg leading-relaxed">{rec.summary}</p>
           {!compact && rec.steps.length > 0 && (
             <ol className="mt-2 list-decimal space-y-0.5 pl-6 text-base">
-              {(open ? rec.steps : rec.steps.slice(0, 2)).map((s, i) => <li key={i}>{s}</li>)}
+              {open && rec.steps.map((s, i) => <li key={i}>{s}</li>)}
             </ol>
           )}
           {rec.assignments.length > 0 && (
-            <div className="mt-3">
+            <div className="mt-5 border-t border-border pt-4">
               <div className="text-sm uppercase tracking-wider text-muted-foreground">Sending</div>
               <ul className="mt-1 space-y-1">
                 {rec.assignments.map((a, i) => (
                   <li key={i} className="text-lg">
                     <span className="font-semibold">{a.worker_name}</span>
                     <span className="text-muted-foreground"> → </span>
-                    <span className="font-display font-bold">{a.to_station ?? (a.to_zone ? `Zone ${a.to_zone}` : "")}</span>
+                    <span className="font-bold">{a.to_station ?? (a.to_zone ? `Zone ${a.to_zone}` : "")}</span>
                     <span className="text-muted-foreground"> · {a.task}</span>
                   </li>
                 ))}
@@ -97,7 +98,7 @@ export function DecisionCard({ inc, clock, notifications, compact }: { inc: Inci
         <p className="mt-3 text-muted-foreground">No recommendation yet.</p>
       )}
 
-      <button onClick={() => setOpen(!open)} className="mt-3 inline-flex min-h-11 items-center gap-1 text-base text-muted-foreground hover:text-foreground">
+      <button onClick={() => setOpen(!open)} aria-expanded={open} className="mt-5 inline-flex min-h-11 items-center gap-1 text-base font-semibold text-muted-foreground hover:text-foreground">
         <ChevronDown className={cn("h-5 w-5 transition-transform", open && "rotate-180")} />
         {open ? "Hide details" : `Details · ${inc.evidence.length} evidence${rec && rec.steps.length > 2 ? ` · all ${rec.steps.length} steps` : ""}`}
       </button>
@@ -108,8 +109,8 @@ export function DecisionCard({ inc, clock, notifications, compact }: { inc: Inci
       )}
 
       {!compact && inc.status === "open" && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          <ActBtn variant="primary" big onClick={accept} disabled={busy}>{busy ? "Sending…" : "Accept"}</ActBtn>
+        <div className="mt-5 flex flex-wrap gap-2 border-t border-border pt-5">
+          <ActBtn variant="primary" big className={featured ? "min-w-40" : ""} onClick={accept} disabled={busy}>{busy ? "Sending…" : "Accept"}</ActBtn>
           <ActBtn big onClick={() => setChangeOpen(true)}>Change</ActBtn>
           <ActBtn big variant="ghost" onClick={() => setDismissOpen(true)}>Dismiss</ActBtn>
         </div>
