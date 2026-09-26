@@ -6,6 +6,7 @@ import { Btn, Empty, Section } from "@/components/sl/bits";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { WhatIfResult, Worker } from "@/types";
+import mockWorkers from "@/mocks/workers.json";
 
 export const Route = createFileRoute("/people")({
   head: () => ({
@@ -32,7 +33,11 @@ function PeoplePage() {
   const [role, setRole] = useState("all");
 
   useEffect(() => {
-    if (demo) return;
+    if (demo) {
+      setWorkers(mockWorkers.workers as unknown as Worker[]);
+      setStations((snap?.stations ?? []).map((s) => ({ id: s.id, zone: s.zone, name: s.name, safety_critical: s.safety_critical })));
+      return;
+    }
     api.workers().then((r) => { setWorkers(r.workers); setStations(r.stations); }).catch(() => {});
   }, [snap?.clock, demo]);
 
