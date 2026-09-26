@@ -1,4 +1,4 @@
-# Render Blueprint: New > Blueprint, point it at this repository.
+# Render Blueprint: New > Blueprint, point it at this repository. Backend only; the dashboard is hosted separately.
 services:
   - type: web
     name: shiftloop

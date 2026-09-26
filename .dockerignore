@@ -5,7 +5,7 @@
 **/.pytest_cache
 **/.DS_Store
 .git
-frontend/dist
+frontend/
 frontend~*
 backend/tests
 ml/tests

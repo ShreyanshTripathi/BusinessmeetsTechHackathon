@@ -70,19 +70,31 @@ Detections under 50% confidence become *expert review* items instead of defects.
 
 ## Deploy on Render (Docker)
 
-One container serves the API, the WebSocket and the built dashboard (`Dockerfile` at the repo root).
+The Docker image (`Dockerfile` at the repo root) is the **backend only**: API, WebSocket and ML models.
+The dashboard is hosted separately.
 
-1. Push the repository to GitHub or GitLab. The trained models in `ml/models/` must be committed; the image copies them.
+**Backend on Render**
+1. Push the repository. The trained models in `ml/models/` must be committed; the image copies them.
 2. In Render: **New → Blueprint** and pick the repository. `render.yaml` creates a Docker web service with a
-   health check on `/api/health`. (Or **New → Web Service**, runtime **Docker**, leave the Dockerfile path as is.)
-3. Optional: set `ANTHROPIC_API_KEY` in the service's environment for the Claude copilot and explanations.
-4. Open the service URL. The demo shift starts at 06:00.
+   health check on `/api/health`. (Or **New → Web Service**, runtime **Docker**.)
+3. Optional: set `ANTHROPIC_API_KEY` for the Claude copilot and explanations.
+4. Note the service URL, e.g. `https://shiftloop.onrender.com`. Opening it shows 404 at `/`; that is expected,
+   try `/api/health`.
+
+**Dashboard (anywhere that hosts static sites)**
+Build it with the backend's URL, then upload `frontend/dist/`:
+```bash
+cd frontend
+VITE_API_URL=https://shiftloop.onrender.com npm run build
+```
+Without `VITE_API_URL` the dashboard talks to its own origin (local dev with the Vite proxy).
 
 Things to know:
-- **One instance only.** The factory state lives in memory; don't scale out, and each deploy or restart starts the shift again.
-- **Free plan sleeps** after 15 minutes without traffic and restarts the shift on the next visit (first load takes
-  ~30–60 s). Use a paid plan for a live demo. The app uses about 160 MB of memory.
-- Build and run locally with Docker: `docker build -t shiftloop . && docker run -p 8000:8000 shiftloop`, then open http://localhost:8000.
+- **One backend instance only.** The factory state lives in memory; each deploy or restart starts the shift again.
+- **Free plan sleeps** after 15 minutes without traffic and restarts the shift on the next visit (first request
+  takes ~30–60 s). Use a paid plan for a live demo. The backend uses about 180 MB of memory.
+- The backend accepts requests from any origin (CORS `*`), which suits a demo; restrict it before real use.
+- Locally: `docker build -t shiftloop . && docker run -p 8000:8000 shiftloop`.
 
 ## The demo shift
 
