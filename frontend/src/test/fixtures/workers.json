@@ -1,0 +1,1111 @@
+{
+ "workers": [
+  {
+   "id": "W001",
+   "name": "Lena Schmidt",
+   "role": "operator",
+   "home_zone": "A",
+   "zone": "A",
+   "station": "S01",
+   "qualifications": {
+    "S01": 3,
+    "S02": 2,
+    "S06": 2
+   },
+   "qual_expiry": {
+    "S01": "2027-10-01",
+    "S02": "2027-10-01",
+    "S06": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W002",
+   "name": "Jan Kowalski",
+   "role": "operator",
+   "home_zone": "A",
+   "zone": "A",
+   "station": "S02",
+   "qualifications": {
+    "S02": 2,
+    "S03": 1,
+    "S01": 3,
+    "S05": 2
+   },
+   "qual_expiry": {
+    "S02": "2027-10-01",
+    "S03": "2027-10-01",
+    "S01": "2027-10-01",
+    "S05": "2027-10-01"
+   },
+   "fire_warden": true,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W003",
+   "name": "Ahmed Yilmaz",
+   "role": "operator",
+   "home_zone": "A",
+   "zone": "A",
+   "station": "S03",
+   "qualifications": {
+    "S03": 2,
+    "S01": 2,
+    "S06": 2,
+    "S04": 2
+   },
+   "qual_expiry": {
+    "S03": "2027-10-01",
+    "S01": "2027-10-01",
+    "S06": "2027-10-01",
+    "S04": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": true,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W004",
+   "name": "Anna Nowak",
+   "role": "operator",
+   "home_zone": "A",
+   "zone": "A",
+   "station": "S04",
+   "qualifications": {
+    "S04": 3,
+    "S06": 2,
+    "S01": 3,
+    "S05": 2
+   },
+   "qual_expiry": {
+    "S04": "2027-10-01",
+    "S06": "2027-10-01",
+    "S01": "2027-10-01",
+    "S05": "2027-10-01"
+   },
+   "fire_warden": true,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W005",
+   "name": "Lukas Weber",
+   "role": "operator",
+   "home_zone": "A",
+   "zone": "A",
+   "station": "S05",
+   "qualifications": {
+    "S05": 2,
+    "S04": 1,
+    "S03": 2
+   },
+   "qual_expiry": {
+    "S05": "2027-10-01",
+    "S04": "2027-10-01",
+    "S03": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W006",
+   "name": "Marta Wi\u015bniewska",
+   "role": "operator",
+   "home_zone": "A",
+   "zone": "A",
+   "station": "S06",
+   "qualifications": {
+    "S06": 3,
+    "S04": 2,
+    "S03": 2
+   },
+   "qual_expiry": {
+    "S06": "2027-10-01",
+    "S04": "2027-10-01",
+    "S03": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W007",
+   "name": "Felix Braun",
+   "role": "operator",
+   "home_zone": "B",
+   "zone": "B",
+   "station": "S07",
+   "qualifications": {
+    "S07": 2,
+    "S10": 1,
+    "S08": 3
+   },
+   "qual_expiry": {
+    "S07": "2027-10-01",
+    "S10": "2027-10-01",
+    "S08": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W008",
+   "name": "Olga Petrenko",
+   "role": "operator",
+   "home_zone": "B",
+   "zone": "B",
+   "station": "S08",
+   "qualifications": {
+    "S08": 2,
+    "S10": 2,
+    "S12": 1
+   },
+   "qual_expiry": {
+    "S08": "2027-10-01",
+    "S10": "2027-10-01",
+    "S12": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W009",
+   "name": "Tobias Klein",
+   "role": "operator",
+   "home_zone": "B",
+   "zone": "B",
+   "station": "S09",
+   "qualifications": {
+    "S09": 3,
+    "S11": 3,
+    "S07": 1
+   },
+   "qual_expiry": {
+    "S09": "2027-10-01",
+    "S11": "2027-10-01",
+    "S07": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W010",
+   "name": "Zofia Lewandowska",
+   "role": "operator",
+   "home_zone": "B",
+   "zone": "B",
+   "station": "S10",
+   "qualifications": {
+    "S10": 3,
+    "S09": 2,
+    "S12": 1,
+    "S08": 2
+   },
+   "qual_expiry": {
+    "S10": "2027-10-01",
+    "S09": "2027-10-01",
+    "S12": "2027-10-01",
+    "S08": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": true,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W011",
+   "name": "Mehmet Demir",
+   "role": "operator",
+   "home_zone": "B",
+   "zone": "B",
+   "station": "S11",
+   "qualifications": {
+    "S11": 2,
+    "S08": 1,
+    "S09": 2,
+    "S12": 2
+   },
+   "qual_expiry": {
+    "S11": "2027-10-01",
+    "S08": "2027-10-01",
+    "S09": "2027-10-01",
+    "S12": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W012",
+   "name": "Sara Hoffmann",
+   "role": "operator",
+   "home_zone": "B",
+   "zone": "B",
+   "station": null,
+   "qualifications": {
+    "S12": 2,
+    "S10": 3,
+    "S09": 2,
+    "S07": 2
+   },
+   "qual_expiry": {
+    "S12": "2027-10-01",
+    "S10": "2027-10-01",
+    "S09": "2027-10-01",
+    "S07": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "absent",
+   "hours_worked": 0.0,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W013",
+   "name": "Piotr Zieli\u0144ski",
+   "role": "operator",
+   "home_zone": "C",
+   "zone": "C",
+   "station": "S13",
+   "qualifications": {
+    "S13": 2,
+    "S16": 2,
+    "S18": 2
+   },
+   "qual_expiry": {
+    "S13": "2027-10-01",
+    "S16": "2027-10-01",
+    "S18": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W014",
+   "name": "Julia Wagner",
+   "role": "operator",
+   "home_zone": "C",
+   "zone": "C",
+   "station": "S14",
+   "qualifications": {
+    "S14": 3,
+    "S13": 2,
+    "S15": 2
+   },
+   "qual_expiry": {
+    "S14": "2027-10-01",
+    "S13": "2027-10-01",
+    "S15": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": true,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W015",
+   "name": "Karim Haddad",
+   "role": "operator",
+   "home_zone": "C",
+   "zone": "C",
+   "station": "S15",
+   "qualifications": {
+    "S15": 2,
+    "S17": 2,
+    "S16": 2
+   },
+   "qual_expiry": {
+    "S15": "2027-10-01",
+    "S17": "2027-10-01",
+    "S16": "2027-10-01"
+   },
+   "fire_warden": true,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W016",
+   "name": "Katarzyna W\u00f3jcik",
+   "role": "operator",
+   "home_zone": "C",
+   "zone": "C",
+   "station": "S16",
+   "qualifications": {
+    "S16": 2,
+    "S14": 2,
+    "S13": 3
+   },
+   "qual_expiry": {
+    "S16": "2027-10-01",
+    "S14": "2027-10-01",
+    "S13": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W017",
+   "name": "Jonas Becker",
+   "role": "operator",
+   "home_zone": "C",
+   "zone": "C",
+   "station": "S17",
+   "qualifications": {
+    "S17": 2,
+    "S13": 2,
+    "S14": 2
+   },
+   "qual_expiry": {
+    "S17": "2027-10-01",
+    "S13": "2027-10-01",
+    "S14": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W018",
+   "name": "Elif Kaya",
+   "role": "operator",
+   "home_zone": "C",
+   "zone": "C",
+   "station": "S18",
+   "qualifications": {
+    "S18": 3,
+    "S16": 3,
+    "S17": 2,
+    "S15": 2
+   },
+   "qual_expiry": {
+    "S18": "2027-10-01",
+    "S16": "2027-10-01",
+    "S17": "2027-10-01",
+    "S15": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W019",
+   "name": "Tomasz Kami\u0144ski",
+   "role": "operator",
+   "home_zone": "D",
+   "zone": "D",
+   "station": "S19",
+   "qualifications": {
+    "S19": 2,
+    "S21": 2,
+    "S24": 3,
+    "S22": 2
+   },
+   "qual_expiry": {
+    "S19": "2027-10-01",
+    "S21": "2027-10-01",
+    "S24": "2027-10-01",
+    "S22": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W020",
+   "name": "Laura Fischer",
+   "role": "operator",
+   "home_zone": "D",
+   "zone": "D",
+   "station": "S20",
+   "qualifications": {
+    "S20": 3,
+    "S23": 2,
+    "S22": 2
+   },
+   "qual_expiry": {
+    "S20": "2026-10-05",
+    "S23": "2027-10-01",
+    "S22": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W021",
+   "name": "Nikolai Ivanov",
+   "role": "operator",
+   "home_zone": "D",
+   "zone": "D",
+   "station": "S21",
+   "qualifications": {
+    "S21": 3,
+    "S23": 1,
+    "S19": 1,
+    "S20": 2,
+    "S22": 2
+   },
+   "qual_expiry": {
+    "S21": "2027-10-01",
+    "S23": "2027-10-01",
+    "S19": "2027-10-01",
+    "S20": "2027-10-01",
+    "S22": "2027-10-01"
+   },
+   "fire_warden": true,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W022",
+   "name": "Hanna Schulz",
+   "role": "operator",
+   "home_zone": "D",
+   "zone": "D",
+   "station": "S22",
+   "qualifications": {
+    "S22": 2,
+    "S20": 1,
+    "S23": 3
+   },
+   "qual_expiry": {
+    "S22": "2027-10-01",
+    "S20": "2027-10-01",
+    "S23": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": true,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W023",
+   "name": "Omar Saleh",
+   "role": "operator",
+   "home_zone": "D",
+   "zone": "D",
+   "station": "S23",
+   "qualifications": {
+    "S23": 2,
+    "S24": 2,
+    "S22": 1
+   },
+   "qual_expiry": {
+    "S23": "2027-10-01",
+    "S24": "2027-10-01",
+    "S22": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W024",
+   "name": "Agnieszka D\u0105browska",
+   "role": "operator",
+   "home_zone": "D",
+   "zone": "D",
+   "station": "S24",
+   "qualifications": {
+    "S24": 3,
+    "S19": 2,
+    "S21": 2,
+    "S20": 2
+   },
+   "qual_expiry": {
+    "S24": "2027-10-01",
+    "S19": "2027-10-01",
+    "S21": "2027-10-01",
+    "S20": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W025",
+   "name": "Paul Richter",
+   "role": "floater",
+   "home_zone": "A",
+   "zone": "A",
+   "station": null,
+   "qualifications": {
+    "S03": 2,
+    "S04": 3,
+    "S02": 2,
+    "S05": 2
+   },
+   "qual_expiry": {
+    "S03": "2027-10-01",
+    "S04": "2027-10-01",
+    "S02": "2027-10-01",
+    "S05": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W026",
+   "name": "Aylin \u00d6zt\u00fcrk",
+   "role": "floater",
+   "home_zone": "A",
+   "zone": "A",
+   "station": null,
+   "qualifications": {
+    "S06": 3,
+    "S03": 2,
+    "S02": 2,
+    "S01": 3
+   },
+   "qual_expiry": {
+    "S06": "2027-10-01",
+    "S03": "2027-10-01",
+    "S02": "2027-10-01",
+    "S01": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W027",
+   "name": "Micha\u0142 Szyma\u0144ski",
+   "role": "floater",
+   "home_zone": "B",
+   "zone": "B",
+   "station": null,
+   "qualifications": {
+    "S10": 3,
+    "S07": 2,
+    "S11": 2,
+    "S08": 2,
+    "S12": 3
+   },
+   "qual_expiry": {
+    "S10": "2027-10-01",
+    "S07": "2027-10-01",
+    "S11": "2027-10-01",
+    "S08": "2027-10-01",
+    "S12": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W028",
+   "name": "Clara Neumann",
+   "role": "floater",
+   "home_zone": "B",
+   "zone": "B",
+   "station": null,
+   "qualifications": {
+    "S11": 3,
+    "S07": 2,
+    "S12": 2,
+    "S09": 2
+   },
+   "qual_expiry": {
+    "S11": "2027-10-01",
+    "S07": "2027-10-01",
+    "S12": "2027-10-01",
+    "S09": "2027-10-01"
+   },
+   "fire_warden": true,
+   "first_aider": false,
+   "status": "absent",
+   "hours_worked": 0.0,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W029",
+   "name": "Yusuf Ayd\u0131n",
+   "role": "floater",
+   "home_zone": "C",
+   "zone": "C",
+   "station": null,
+   "qualifications": {
+    "S18": 3,
+    "S16": 2,
+    "S14": 2,
+    "S17": 3
+   },
+   "qual_expiry": {
+    "S18": "2027-10-01",
+    "S16": "2027-10-01",
+    "S14": "2027-10-01",
+    "S17": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W030",
+   "name": "Ewa Koz\u0142owska",
+   "role": "floater",
+   "home_zone": "C",
+   "zone": "C",
+   "station": null,
+   "qualifications": {
+    "S16": 3,
+    "S15": 2,
+    "S18": 2,
+    "S17": 2
+   },
+   "qual_expiry": {
+    "S16": "2027-10-01",
+    "S15": "2027-10-01",
+    "S18": "2027-10-01",
+    "S17": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W031",
+   "name": "David Koch",
+   "role": "floater",
+   "home_zone": "D",
+   "zone": "D",
+   "station": null,
+   "qualifications": {
+    "S19": 2,
+    "S21": 2,
+    "S24": 2,
+    "S23": 2
+   },
+   "qual_expiry": {
+    "S19": "2027-10-01",
+    "S21": "2027-10-01",
+    "S24": "2027-10-01",
+    "S23": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "absent",
+   "hours_worked": 0.0,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W032",
+   "name": "Ines Wolf",
+   "role": "floater",
+   "home_zone": "D",
+   "zone": "D",
+   "station": null,
+   "qualifications": {
+    "S24": 2,
+    "S19": 3,
+    "S20": 2,
+    "S23": 2
+   },
+   "qual_expiry": {
+    "S24": "2027-10-01",
+    "S19": "2027-10-01",
+    "S20": "2027-10-01",
+    "S23": "2027-10-01"
+   },
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W033",
+   "name": "Bartosz Mazur",
+   "role": "maintenance",
+   "home_zone": "B",
+   "zone": "B",
+   "station": null,
+   "qualifications": {},
+   "qual_expiry": {},
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "pl",
+    "en"
+   ]
+  },
+  {
+   "id": "W034",
+   "name": "Mira Schr\u00f6der",
+   "role": "maintenance",
+   "home_zone": "C",
+   "zone": "C",
+   "station": null,
+   "qualifications": {},
+   "qual_expiry": {},
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  },
+  {
+   "id": "W035",
+   "name": "Ali Hassan",
+   "role": "maintenance",
+   "home_zone": "A",
+   "zone": "A",
+   "station": null,
+   "qualifications": {},
+   "qual_expiry": {},
+   "fire_warden": false,
+   "first_aider": false,
+   "status": "present",
+   "hours_worked": 0.03333333333333333,
+   "busy_with": null,
+   "languages": [
+    "de",
+    "en"
+   ]
+  }
+ ],
+ "stations": [
+  {
+   "id": "S01",
+   "zone": "A",
+   "name": "Wiring harness",
+   "safety_critical": false
+  },
+  {
+   "id": "S02",
+   "zone": "A",
+   "name": "Headliner",
+   "safety_critical": false
+  },
+  {
+   "id": "S03",
+   "zone": "A",
+   "name": "Instrument panel",
+   "safety_critical": false
+  },
+  {
+   "id": "S04",
+   "zone": "A",
+   "name": "Carpet & insulation",
+   "safety_critical": false
+  },
+  {
+   "id": "S05",
+   "zone": "A",
+   "name": "Pedal box",
+   "safety_critical": false
+  },
+  {
+   "id": "S06",
+   "zone": "A",
+   "name": "HVAC module",
+   "safety_critical": false
+  },
+  {
+   "id": "S07",
+   "zone": "B",
+   "name": "Brake lines",
+   "safety_critical": false
+  },
+  {
+   "id": "S08",
+   "zone": "B",
+   "name": "Fuel-free cooling lines",
+   "safety_critical": false
+  },
+  {
+   "id": "S09",
+   "zone": "B",
+   "name": "Front subframe",
+   "safety_critical": false
+  },
+  {
+   "id": "S10",
+   "zone": "B",
+   "name": "Rear subframe",
+   "safety_critical": false
+  },
+  {
+   "id": "S11",
+   "zone": "B",
+   "name": "Suspension bolts",
+   "safety_critical": false
+  },
+  {
+   "id": "S12",
+   "zone": "B",
+   "name": "Underbody torque",
+   "safety_critical": false
+  },
+  {
+   "id": "S13",
+   "zone": "C",
+   "name": "Drive unit (rear)",
+   "safety_critical": false
+  },
+  {
+   "id": "S14",
+   "zone": "C",
+   "name": "Drive unit (front)",
+   "safety_critical": false
+  },
+  {
+   "id": "S15",
+   "zone": "C",
+   "name": "HV cabling",
+   "safety_critical": true
+  },
+  {
+   "id": "S16",
+   "zone": "C",
+   "name": "Coolant fill",
+   "safety_critical": false
+  },
+  {
+   "id": "S17",
+   "zone": "C",
+   "name": "Battery lift prep",
+   "safety_critical": false
+  },
+  {
+   "id": "S18",
+   "zone": "C",
+   "name": "Battery marriage",
+   "safety_critical": true
+  },
+  {
+   "id": "S19",
+   "zone": "D",
+   "name": "Glass install",
+   "safety_critical": false
+  },
+  {
+   "id": "S20",
+   "zone": "D",
+   "name": "Seats",
+   "safety_critical": false
+  },
+  {
+   "id": "S21",
+   "zone": "D",
+   "name": "Doors on",
+   "safety_critical": false
+  },
+  {
+   "id": "S22",
+   "zone": "D",
+   "name": "Wheels & tyres",
+   "safety_critical": false
+  },
+  {
+   "id": "S23",
+   "zone": "D",
+   "name": "Fluids & flash",
+   "safety_critical": false
+  },
+  {
+   "id": "S24",
+   "zone": "D",
+   "name": "Final inspection",
+   "safety_critical": false
+  }
+ ]
+}

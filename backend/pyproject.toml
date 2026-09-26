@@ -1,0 +1,34 @@
+[project]
+name = "shiftloop"
+version = "0.1.0"
+description = "Central factory intelligence MVP: staffing, assembly and safety agents with a supervisor dashboard"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.7",
+    "anthropic>=0.60",
+    "python-multipart>=0.0.9",
+    "pillow>=10.0",
+]
+
+[project.optional-dependencies]
+vision = ["ultralytics>=8.3"]
+
+[dependency-groups]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "httpx>=0.27"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+pythonpath = ["."]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["shiftloop"]
+
+[project.scripts]
+shiftloop = "shiftloop.api.app:main"

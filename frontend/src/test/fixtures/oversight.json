@@ -1,0 +1,179 @@
+{
+ "decisions": {
+  "total": 5,
+  "accept": 5,
+  "modify": 0,
+  "dismiss": 0
+ },
+ "override_rate": 0.0,
+ "human_decided_pct": 100,
+ "agents": {
+  "staffing": {
+   "events": 4,
+   "incidents": 4,
+   "decisions": 4,
+   "accepted": 4,
+   "overridden": 0
+  },
+  "assembly": {
+   "events": 12,
+   "incidents": 7,
+   "decisions": 2,
+   "accepted": 2,
+   "overridden": 0
+  },
+  "safety": {
+   "events": 3,
+   "incidents": 1,
+   "decisions": 0,
+   "accepted": 0,
+   "overridden": 0
+  }
+ },
+ "expert_queue": 0,
+ "attention": {
+  "signals": 18985,
+  "events": 27,
+  "incidents": 10,
+  "active": 2,
+  "held_back": 18983
+ },
+ "log": [
+  {
+   "id": "dec_0005",
+   "time": "2026-10-01T09:25:00",
+   "incident_id": "inc_0009",
+   "incident_title": "Trainee without sign-off at S09",
+   "recommended": "Support the trainee at S09",
+   "decision": "accept",
+   "reason": "",
+   "applied": [],
+   "agents": [
+    "staffing"
+   ],
+   "decided_by": "supervisor"
+  },
+  {
+   "id": "dec_0004",
+   "time": "2026-10-01T09:25:00",
+   "incident_id": "inc_0008",
+   "incident_title": "Tool failure predicted at S12",
+   "recommended": "Tool failure predicted at S12",
+   "decision": "accept",
+   "reason": "",
+   "applied": [
+    "Bartosz Mazur \u2192 zone B (swap the tool at S12 at the 09:30 break)",
+    "called maintenance"
+   ],
+   "agents": [
+    "assembly"
+   ],
+   "decided_by": "supervisor"
+  },
+  {
+   "id": "dec_0003",
+   "time": "2026-10-01T06:02:00",
+   "incident_id": "inc_0002",
+   "incident_title": "Qualification expiring at S20",
+   "recommended": "Schedule re-certification",
+   "decision": "accept",
+   "reason": "",
+   "applied": [],
+   "agents": [
+    "staffing"
+   ],
+   "decided_by": "supervisor"
+  },
+  {
+   "id": "dec_0002",
+   "time": "2026-10-01T06:02:00",
+   "incident_id": "inc_0003",
+   "incident_title": "No fire warden in zone B",
+   "recommended": "Restore fire warden cover in zone B",
+   "decision": "accept",
+   "reason": "",
+   "applied": [
+    "Jan Kowalski \u2192 zone B (fire warden cover for zone B)",
+    "Paul Richter \u2192 S02"
+   ],
+   "agents": [
+    "staffing"
+   ],
+   "decided_by": "supervisor"
+  },
+  {
+   "id": "dec_0001",
+   "time": "2026-10-01T06:02:00",
+   "incident_id": "inc_0001",
+   "incident_title": "S12 has no operator + station starved",
+   "recommended": "Cover S12",
+   "decision": "accept",
+   "reason": "",
+   "applied": [
+    "Micha\u0142 Szyma\u0144ski \u2192 S12"
+   ],
+   "agents": [
+    "assembly",
+    "staffing"
+   ],
+   "decided_by": "supervisor"
+  }
+ ],
+ "data_use": {
+  "staffing": {
+   "uses": [
+    "shift roster",
+    "absences",
+    "qualification matrix",
+    "safety roles",
+    "hours worked"
+   ],
+   "purpose": "cover stations with qualified people within legal working-time limits",
+   "never": [
+    "performance scoring",
+    "speed or error rates per person"
+   ]
+  },
+  "assembly": {
+   "uses": [
+    "station status",
+    "cycle time per station",
+    "tool torque",
+    "part stock",
+    "quality camera detections"
+   ],
+   "purpose": "detect stops, real slowdowns, tool wear, shortages and defect patterns",
+   "never": [
+    "linking cycle times or defects to named workers"
+   ]
+  },
+  "safety": {
+   "uses": [
+    "smoke/heat/gas sensors",
+    "battery temperature",
+    "fire, exit and PPE cameras (zone level)"
+   ],
+   "purpose": "detect fire, overheating, gas, blocked exits and missing protective equipment",
+   "never": [
+    "face recognition",
+    "identifying who is not wearing PPE"
+   ]
+  },
+  "central": {
+   "uses": [
+    "events from the three agents",
+    "supervisor decisions"
+   ],
+   "purpose": "merge, rank and recommend; every action needs a human decision",
+   "never": [
+    "acting without supervisor confirmation"
+   ]
+  }
+ },
+ "works_council": {
+  "individual_performance_scoring": false,
+  "all_decisions_by_humans": true,
+  "camera_data": "zone-level detections only; no identities stored",
+  "decision_log_retained": true
+ }
+}

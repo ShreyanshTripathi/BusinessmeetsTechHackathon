@@ -1,0 +1,802 @@
+{
+ "clock": "2026-10-01T06:02:00",
+ "sim": {
+  "running": false,
+  "speed": 2.0,
+  "scenario": "demo",
+  "vision": {
+   "quality": "no model loaded",
+   "fire": "no model loaded",
+   "ppe": "no model loaded",
+   "exit": "no model loaded"
+  }
+ },
+ "mode": "offline",
+ "zones": [
+  {
+   "id": "A",
+   "name": "Zone A",
+   "people": 9,
+   "fire_wardens": [
+    "Jan Kowalski",
+    "Anna Nowak"
+   ],
+   "first_aiders": [
+    "Ahmed Yilmaz"
+   ],
+   "exits": [
+    "EXIT-A1",
+    "EXIT-A2"
+   ],
+   "assembly_point": "AP-A",
+   "sensors": [
+    {
+     "id": "SMK-A",
+     "kind": "smoke",
+     "unit": "%obs/m",
+     "warn": 2.0,
+     "crit": 4.0,
+     "station": null,
+     "value": 0.17
+    },
+    {
+     "id": "HEAT-A",
+     "kind": "heat",
+     "unit": "\u00b0C",
+     "warn": 40.0,
+     "crit": 57.0,
+     "station": null,
+     "value": 24.12
+    },
+    {
+     "id": "GAS-A",
+     "kind": "gas",
+     "unit": "ppm CO",
+     "warn": 30.0,
+     "crit": 100.0,
+     "station": null,
+     "value": 4.7
+    }
+   ],
+   "alert": null
+  },
+  {
+   "id": "B",
+   "name": "Zone B",
+   "people": 7,
+   "fire_wardens": [],
+   "first_aiders": [
+    "Zofia Lewandowska"
+   ],
+   "exits": [
+    "EXIT-B1",
+    "EXIT-B2"
+   ],
+   "assembly_point": "AP-B",
+   "sensors": [
+    {
+     "id": "SMK-B",
+     "kind": "smoke",
+     "unit": "%obs/m",
+     "warn": 2.0,
+     "crit": 4.0,
+     "station": null,
+     "value": 0.21
+    },
+    {
+     "id": "HEAT-B",
+     "kind": "heat",
+     "unit": "\u00b0C",
+     "warn": 40.0,
+     "crit": 57.0,
+     "station": null,
+     "value": 24.74
+    },
+    {
+     "id": "GAS-B",
+     "kind": "gas",
+     "unit": "ppm CO",
+     "warn": 30.0,
+     "crit": 100.0,
+     "station": null,
+     "value": 5.12
+    }
+   ],
+   "alert": "high"
+  },
+  {
+   "id": "C",
+   "name": "Zone C",
+   "people": 9,
+   "fire_wardens": [
+    "Karim Haddad"
+   ],
+   "first_aiders": [
+    "Julia Wagner"
+   ],
+   "exits": [
+    "EXIT-C1",
+    "EXIT-C2"
+   ],
+   "assembly_point": "AP-C",
+   "sensors": [
+    {
+     "id": "SMK-C",
+     "kind": "smoke",
+     "unit": "%obs/m",
+     "warn": 2.0,
+     "crit": 4.0,
+     "station": null,
+     "value": 0.23
+    },
+    {
+     "id": "HEAT-C",
+     "kind": "heat",
+     "unit": "\u00b0C",
+     "warn": 40.0,
+     "crit": 57.0,
+     "station": null,
+     "value": 24.6
+    },
+    {
+     "id": "GAS-C",
+     "kind": "gas",
+     "unit": "ppm CO",
+     "warn": 30.0,
+     "crit": 100.0,
+     "station": null,
+     "value": 4.49
+    },
+    {
+     "id": "BT-S18",
+     "kind": "battery_temp",
+     "unit": "\u00b0C",
+     "warn": 45.0,
+     "crit": 60.0,
+     "station": "S18",
+     "value": 30.88
+    }
+   ],
+   "alert": null
+  },
+  {
+   "id": "D",
+   "name": "Zone D",
+   "people": 7,
+   "fire_wardens": [
+    "Nikolai Ivanov"
+   ],
+   "first_aiders": [
+    "Hanna Schulz"
+   ],
+   "exits": [
+    "EXIT-D1",
+    "EXIT-D2"
+   ],
+   "assembly_point": "AP-D",
+   "sensors": [
+    {
+     "id": "SMK-D",
+     "kind": "smoke",
+     "unit": "%obs/m",
+     "warn": 2.0,
+     "crit": 4.0,
+     "station": null,
+     "value": 0.11
+    },
+    {
+     "id": "HEAT-D",
+     "kind": "heat",
+     "unit": "\u00b0C",
+     "warn": 40.0,
+     "crit": 57.0,
+     "station": null,
+     "value": 24.15
+    },
+    {
+     "id": "GAS-D",
+     "kind": "gas",
+     "unit": "ppm CO",
+     "warn": 30.0,
+     "crit": 100.0,
+     "station": null,
+     "value": 5.23
+    }
+   ],
+   "alert": "low"
+  }
+ ],
+ "stations": [
+  {
+   "id": "S01",
+   "zone": "A",
+   "name": "Wiring harness",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W001",
+    "name": "Lena Schmidt",
+    "level": 3
+   },
+   "cycle_time_s": 60.3,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S02",
+   "zone": "A",
+   "name": "Headliner",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W002",
+    "name": "Jan Kowalski",
+    "level": 2
+   },
+   "cycle_time_s": 64.5,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S03",
+   "zone": "A",
+   "name": "Instrument panel",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W003",
+    "name": "Ahmed Yilmaz",
+    "level": 2
+   },
+   "cycle_time_s": 59.3,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S04",
+   "zone": "A",
+   "name": "Carpet & insulation",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W004",
+    "name": "Anna Nowak",
+    "level": 3
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S05",
+   "zone": "A",
+   "name": "Pedal box",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W005",
+    "name": "Lukas Weber",
+    "level": 2
+   },
+   "cycle_time_s": 62.8,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S06",
+   "zone": "A",
+   "name": "HVAC module",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W006",
+    "name": "Marta Wi\u015bniewska",
+    "level": 3
+   },
+   "cycle_time_s": 60.9,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S07",
+   "zone": "B",
+   "name": "Brake lines",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W007",
+    "name": "Felix Braun",
+    "level": 2
+   },
+   "cycle_time_s": 58.9,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S08",
+   "zone": "B",
+   "name": "Fuel-free cooling lines",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W008",
+    "name": "Olga Petrenko",
+    "level": 2
+   },
+   "cycle_time_s": 64.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S09",
+   "zone": "B",
+   "name": "Front subframe",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W009",
+    "name": "Tobias Klein",
+    "level": 3
+   },
+   "cycle_time_s": 62.7,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S10",
+   "zone": "B",
+   "name": "Rear subframe",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W010",
+    "name": "Zofia Lewandowska",
+    "level": 3
+   },
+   "cycle_time_s": 62.8,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S11",
+   "zone": "B",
+   "name": "Suspension bolts",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W011",
+    "name": "Mehmet Demir",
+    "level": 2
+   },
+   "cycle_time_s": 57.6,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S12",
+   "zone": "B",
+   "name": "Underbody torque",
+   "status": "starved",
+   "safety_critical": false,
+   "operator": null,
+   "cycle_time_s": 0.0,
+   "takt_s": 60.0,
+   "downtime_min": 2.0,
+   "defects": 0,
+   "alert": "high"
+  },
+  {
+   "id": "S13",
+   "zone": "C",
+   "name": "Drive unit (rear)",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W013",
+    "name": "Piotr Zieli\u0144ski",
+    "level": 2
+   },
+   "cycle_time_s": 60.4,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S14",
+   "zone": "C",
+   "name": "Drive unit (front)",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W014",
+    "name": "Julia Wagner",
+    "level": 3
+   },
+   "cycle_time_s": 57.4,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S15",
+   "zone": "C",
+   "name": "HV cabling",
+   "status": "running",
+   "safety_critical": true,
+   "operator": {
+    "id": "W015",
+    "name": "Karim Haddad",
+    "level": 2
+   },
+   "cycle_time_s": 61.5,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S16",
+   "zone": "C",
+   "name": "Coolant fill",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W016",
+    "name": "Katarzyna W\u00f3jcik",
+    "level": 2
+   },
+   "cycle_time_s": 61.2,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S17",
+   "zone": "C",
+   "name": "Battery lift prep",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W017",
+    "name": "Jonas Becker",
+    "level": 2
+   },
+   "cycle_time_s": 56.6,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S18",
+   "zone": "C",
+   "name": "Battery marriage",
+   "status": "running",
+   "safety_critical": true,
+   "operator": {
+    "id": "W018",
+    "name": "Elif Kaya",
+    "level": 3
+   },
+   "cycle_time_s": 60.4,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S19",
+   "zone": "D",
+   "name": "Glass install",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W019",
+    "name": "Tomasz Kami\u0144ski",
+    "level": 2
+   },
+   "cycle_time_s": 58.5,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S20",
+   "zone": "D",
+   "name": "Seats",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W020",
+    "name": "Laura Fischer",
+    "level": 3
+   },
+   "cycle_time_s": 59.2,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": "low"
+  },
+  {
+   "id": "S21",
+   "zone": "D",
+   "name": "Doors on",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W021",
+    "name": "Nikolai Ivanov",
+    "level": 3
+   },
+   "cycle_time_s": 66.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S22",
+   "zone": "D",
+   "name": "Wheels & tyres",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W022",
+    "name": "Hanna Schulz",
+    "level": 2
+   },
+   "cycle_time_s": 60.9,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S23",
+   "zone": "D",
+   "name": "Fluids & flash",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W023",
+    "name": "Omar Saleh",
+    "level": 2
+   },
+   "cycle_time_s": 61.8,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S24",
+   "zone": "D",
+   "name": "Final inspection",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W024",
+    "name": "Agnieszka D\u0105browska",
+    "level": 3
+   },
+   "cycle_time_s": 61.4,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  }
+ ],
+ "incidents": {
+  "active": [
+   {
+    "id": "inc_0001",
+    "title": "S12 has no operator + station starved",
+    "zone": "B",
+    "stations": [
+     "S12"
+    ],
+    "agents": [
+     "assembly",
+     "staffing"
+    ],
+    "severity": "high",
+    "category": "production",
+    "confidence": 1.0,
+    "opened": "2026-10-01T06:00:00",
+    "updated": "2026-10-01T06:00:00",
+    "score": 115.0,
+    "status": "open",
+    "visibility": "active",
+    "likely_cause": "S12 is not staffed",
+    "evidence": [
+     "S12 is waiting for parts or cars",
+     "No one present at S12 (Underbody torque)"
+    ],
+    "recommendation": {
+     "action": "keep_running",
+     "scope": "station",
+     "target": "S12",
+     "summary": "Cover S12",
+     "steps": [
+      "Move Micha\u0142 Szyma\u0144ski to S12: trainer on S12, free, zone B, 0.0h worked"
+     ],
+     "assignments": [
+      {
+       "worker": "W027",
+       "worker_name": "Micha\u0142 Szyma\u0144ski",
+       "kind": "station",
+       "to_station": "S12",
+       "to_zone": null,
+       "task": "cover S12",
+       "reason": "trainer on S12, free, zone B, 0.0h worked"
+      }
+     ],
+     "escalations": [],
+     "hard_rule": null
+    }
+   },
+   {
+    "id": "inc_0003",
+    "title": "No fire warden in zone B",
+    "zone": "B",
+    "stations": [],
+    "agents": [
+     "staffing"
+    ],
+    "severity": "high",
+    "category": "staffing",
+    "confidence": 1.0,
+    "opened": "2026-10-01T06:00:00",
+    "updated": "2026-10-01T06:00:00",
+    "score": 70.0,
+    "status": "open",
+    "visibility": "active",
+    "likely_cause": null,
+    "evidence": [
+     "Zone B has no trained fire warden present"
+    ],
+    "recommendation": {
+     "action": "keep_running",
+     "scope": "zone",
+     "target": "B",
+     "summary": "Restore fire warden cover in zone B",
+     "steps": [
+      "Move Jan Kowalski (fire warden) to zone B",
+      "Move Paul Richter to S02: qualified on S02, free, zone A, 0.0h worked"
+     ],
+     "assignments": [
+      {
+       "worker": "W002",
+       "worker_name": "Jan Kowalski",
+       "kind": "relocate",
+       "to_station": null,
+       "to_zone": "B",
+       "task": "fire warden cover for zone B",
+       "reason": "fire warden, zone A keeps 1 warden(s); S02 needs a backfill"
+      },
+      {
+       "worker": "W025",
+       "worker_name": "Paul Richter",
+       "kind": "station",
+       "to_station": "S02",
+       "to_zone": null,
+       "task": "backfill S02",
+       "reason": "qualified on S02, free, zone A, 0.0h worked"
+      }
+     ],
+     "escalations": [],
+     "hard_rule": null
+    }
+   }
+  ],
+  "held": [
+   {
+    "id": "inc_0002",
+    "title": "Qualification expiring at S20",
+    "zone": "D",
+    "stations": [
+     "S20"
+    ],
+    "agents": [
+     "staffing"
+    ],
+    "severity": "low",
+    "category": "staffing",
+    "confidence": 1.0,
+    "opened": "2026-10-01T06:00:00",
+    "updated": "2026-10-01T06:00:00",
+    "score": 20.0,
+    "status": "open",
+    "visibility": "held",
+    "likely_cause": null,
+    "evidence": [
+     "Qualification for S20 expires 2026-10-05"
+    ],
+    "recommendation": {
+     "action": "keep_running",
+     "scope": "station",
+     "target": "S20",
+     "summary": "Schedule re-certification",
+     "steps": [
+      "Book re-certification with training this week"
+     ],
+     "assignments": [],
+     "escalations": [],
+     "hard_rule": null
+    }
+   }
+  ],
+  "in_progress": []
+ },
+ "notifications": [
+  {
+   "id": "ntf_0002",
+   "time": "2026-10-01T06:00:00",
+   "level": "warning",
+   "title": "No fire warden in zone B",
+   "body": "Restore fire warden cover in zone B",
+   "incident_id": "inc_0003",
+   "acknowledged": false
+  },
+  {
+   "id": "ntf_0001",
+   "time": "2026-10-01T06:00:00",
+   "level": "warning",
+   "title": "S12 has no operator + station starved",
+   "body": "Cover S12",
+   "incident_id": "inc_0001",
+   "acknowledged": false
+  }
+ ],
+ "escalations": [],
+ "proposals": [],
+ "emergency": null,
+ "kpis": {
+  "time": "2026-10-01T06:02:00",
+  "cars_built": 0,
+  "plan": 2,
+  "output_pct": 0,
+  "downtime_min": {
+   "S12": 2.0
+  },
+  "downtime_total_min": 2.0,
+  "defects": 0,
+  "open_safety": 0,
+  "open_incidents": 3,
+  "impact": {}
+ },
+ "attention": {
+  "signals": 149,
+  "events": 4,
+  "incidents": 3,
+  "active": 2,
+  "held_back": 147
+ },
+ "expert_queue": []
+}
