@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import { getApiBase, getWsUrl, setApiBase } from "@/config";
+import { DEMO_ENABLED, getApiBase, getWsUrl, setApiBase } from "@/config";
 import { api } from "@/lib/api";
 import { announce, dropFromQueue, setVoiceEnabled, voiceSupported } from "@/lib/voice";
 import type { RestartPlan, Snapshot } from "@/types";
