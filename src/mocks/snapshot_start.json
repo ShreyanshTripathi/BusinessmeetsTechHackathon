@@ -644,7 +644,18 @@
   }
  ],
  "escalations": [],
- "proposals": [],
+  "proposals": [
+   {
+    "id": "prp_0001",
+    "kind": "assign",
+    "description": "Assign floater Ben Schulz to S12 until W012 returns",
+    "params": {
+     "worker": "W017",
+     "station": "S12"
+    },
+    "status": "pending"
+   }
+  ],
  "emergency": null,
  "kpis": {
   "time": "2026-10-01T06:05:00",
@@ -667,5 +678,15 @@
   "active": 1,
   "held_back": 411
  },
- "expert_queue": []
+  "expert_queue": [
+   {
+    "id": "exq_0001",
+    "time": "2026-10-01T06:03:00",
+    "station": "S05",
+    "evidence": [
+     "CAM-Q-A: possible paint blemish (41%)"
+    ],
+    "confidence": 0.41
+   }
+  ]
 }
