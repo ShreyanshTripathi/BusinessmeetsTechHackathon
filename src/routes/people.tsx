@@ -6,6 +6,7 @@ import { Btn, Empty, Section } from "@/components/sl/bits";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { WhatIfResult, Worker } from "@/types";
+import mockWorkers from "@/mocks/workers.json";
 
 export const Route = createFileRoute("/people")({
   head: () => ({
@@ -32,7 +33,11 @@ function PeoplePage() {
   const [role, setRole] = useState("all");
 
   useEffect(() => {
-    if (demo) return;
+    if (demo) {
+      setWorkers(mockWorkers.workers as unknown as Worker[]);
+      setStations((snap?.stations ?? []).map((s) => ({ id: s.id, zone: s.zone, name: s.name, safety_critical: s.safety_critical })));
+      return;
+    }
     api.workers().then((r) => { setWorkers(r.workers); setStations(r.stations); }).catch(() => {});
   }, [snap?.clock, demo]);
 
@@ -47,7 +52,7 @@ function PeoplePage() {
           <Filter value={status} onChange={setStatus} label="Status" opts={["present", "break", "absent"]} />
           <Filter value={role} onChange={setRole} label="Role" opts={["operator", "floater", "maintenance", "team_lead"]} />
         </div>
-        {demo ? <Empty>Connect a backend to see the worker list.</Empty> : !workers ? <Empty>Loading people…</Empty> : list.length === 0 ? <Empty>No one matches these filters.</Empty> : (
+        {!workers ? <Empty>Loading people…</Empty> : list.length === 0 ? <Empty>No one matches these filters.</Empty> : (
           <div className="grid gap-2 md:grid-cols-2">
             {list.map((w) => <WorkerCard key={w.id} w={w} />)}
           </div>

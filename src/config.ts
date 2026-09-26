@@ -1,5 +1,14 @@
 const KEY = "shiftloop_api";
 
+/**
+ * DEMO MODE SWITCH — set to false (or delete src/mocks/) once the real
+ * backend is hosted. When true, the app opens instantly on the mock
+ * snapshots in src/mocks/ and shows the DEMO DATA badge; a reachable
+ * backend still takes over automatically. When false, no dummy data is
+ * ever shown and the app waits for the backend.
+ */
+export const DEMO_ENABLED = true;
+
 /** Resolve API base: ?api= → localStorage → VITE_API_BASE_URL → "" (same origin). Browser only. */
 export function resolveApiBase(): string {
   if (typeof window === "undefined") return "";

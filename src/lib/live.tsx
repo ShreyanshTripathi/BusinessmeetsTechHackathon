@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import { getApiBase, getWsUrl, setApiBase } from "@/config";
+import { DEMO_ENABLED, getApiBase, getWsUrl, setApiBase } from "@/config";
 import { api } from "@/lib/api";
 import { announce, dropFromQueue, setVoiceEnabled, voiceSupported } from "@/lib/voice";
 import type { RestartPlan, Snapshot } from "@/types";
@@ -44,8 +44,8 @@ const VOICE_KEY = "shiftloop_voice";
 
 export function LiveProvider({ children }: { children: ReactNode }) {
   const [liveSnap, setLiveSnap] = useState<Snapshot | null>(null);
-  const [conn, setConn] = useState<ConnState>("connecting");
-  const [demo, setDemo] = useState(false);
+  const [conn, setConn] = useState<ConnState>(DEMO_ENABLED ? "demo" : "connecting");
+  const [demo, setDemo] = useState(DEMO_ENABLED);
   const [demoScenario, setDemoScenario] = useState<DemoScenario>("start");
   const [apiBase, setApiBaseState] = useState("");
   const [gen, setGen] = useState(0);
@@ -88,7 +88,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     let reconnectT: ReturnType<typeof setTimeout> | null = null;
     let pollT: ReturnType<typeof setInterval> | null = null;
     let gotData = false;
-    setConn("connecting");
+    setConn(DEMO_ENABLED ? "demo" : "connecting");
 
     const onSnap = (s: Snapshot) => {
       gotData = true;
@@ -124,7 +124,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     };
     open();
     api.snapshot().then(onSnap).catch(() => {});
-    const demoT = setTimeout(() => { if (!gotData) { setDemo(true); setConn("demo"); } }, 5000);
+    const demoT = setTimeout(() => { if (!gotData && DEMO_ENABLED) { setDemo(true); setConn("demo"); } }, 5000);
 
     return () => {
       closed = true;
