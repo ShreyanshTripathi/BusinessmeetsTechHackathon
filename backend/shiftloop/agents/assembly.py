@@ -11,9 +11,10 @@ from ..stats import drop_is_real, trend_eta
 from .base import BaseAgent
 
 BASELINE_READINGS = 30  # torque readings used to learn what "normal" looks like
-ROLLING = 10
+ROLLING = 20  # torque readings in the rolling spread; shorter windows false-alarm on noise
 DRIFT_RATIO = 2.0  # rolling spread vs baseline that signals tool wear
 FAILURE_RATIO = 4.0  # spread at which the tool is expected to fail
+DRIFT_CONFIRM = 5  # consecutive drifting readings before reporting: one noisy window is not wear
 DEFECT_WINDOW = timedelta(minutes=30)
 UNSURE_CONFIDENCE = 0.5
 FORECAST_EVERY = timedelta(minutes=30)
@@ -30,6 +31,7 @@ class AssemblyAgent(BaseAgent):
         self.cycles: dict[str, deque] = defaultdict(lambda: deque(maxlen=60))
         self.torque: dict[str, list[float]] = defaultdict(list)
         self.torque_spread: dict[str, deque] = defaultdict(lambda: deque(maxlen=20))  # (minute, spread)
+        self.drift_streak: dict[str, int] = defaultdict(int)
         self.defect_times: dict[str, deque] = defaultdict(deque)
 
     def handle(self, reading, state: FactoryState) -> list[Event]:
@@ -110,7 +112,9 @@ class AssemblyAgent(BaseAgent):
         self.torque_spread[sid].append((minute, spread))
         ratio = spread / base_spread
         shift = abs(mean(recent) - base_mean) / base_spread
-        if ratio < DRIFT_RATIO and shift < 4:
+        drifting = ratio >= DRIFT_RATIO or shift >= 4
+        self.drift_streak[sid] = self.drift_streak[sid] + 1 if drifting else 0
+        if self.drift_streak[sid] < DRIFT_CONFIRM:
             return []
         pts = list(self.torque_spread[sid])[-15:]
         eta = trend_eta([p[0] for p in pts], [p[1] for p in pts], FAILURE_RATIO * base_spread)

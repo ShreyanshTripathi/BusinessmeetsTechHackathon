@@ -17,7 +17,7 @@ class Severity(str, Enum):
 
     @property
     def rank(self) -> int:
-        return ["info", "low", "medium", "high", "critical"].index(self.value)
+        return list(Severity).index(self)
 
 
 # --------------------------------------------------------------------------- layout
@@ -65,6 +65,11 @@ class Layout(BaseModel):
 
     def zone(self, zone_id: str) -> Zone:
         return next(z for z in self.zones if z.id == zone_id)
+
+    @property
+    def takt_s(self) -> float:
+        """The section's takt: a serial line runs at one pace."""
+        return next(iter(self.stations.values())).takt_s
 
 
 # --------------------------------------------------------------------------- people
@@ -232,6 +237,8 @@ class Notification(BaseModel):
     title: str
     body: str = ""
     incident_id: str | None = None
+    code: str | None = None  # short label: category letter-zone+station, e.g. "S-C18" (safety, zone C, S18)
+    spoken: str | None = None  # phrase for voice alerts; None when the alert should not be spoken
     acknowledged: bool = False
 
 

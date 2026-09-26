@@ -53,7 +53,8 @@ def likely_cause(events: list[Event]) -> str | None:
     types = {e.type for e in events}
     station = next((e.station for e in events if e.station), None)
     if "battery_overheating" in types and types & {"possible_fire", "fire_confirmed"}:
-        return "Battery pack overheating at S18 is the likely source of the smoke"
+        battery = next(e.station for e in events if e.type == "battery_overheating")
+        return f"Battery pack overheating at {battery} is the likely source of the smoke"
     if "predicted_tool_failure" in types and "defect_pattern" in types:
         return f"Defects started with torque drift at {station}: likely the tool, not the operator"
     if "untrained_at_station" in types and "defect_pattern" in types:
