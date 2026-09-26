@@ -111,8 +111,9 @@ class ToolExecutor:
             if inc.visibility == "held" and not include_held:
                 continue
             out.append({"id": inc.id, "title": inc.title, "severity": inc.severity.value, "category": inc.category,
-                        "visibility": inc.visibility, "score": inc.score, "zone": inc.zone, "stations": inc.stations,
-                        "agents": inc.agents, "likely_cause": inc.likely_cause, "evidence": inc.evidence[:6],
+                        "visibility": inc.visibility, "score": inc.score, "tier": inc.tier,
+                        "priority_reason": inc.priority_reason, "trend": inc.trend, "zone": inc.zone,
+                        "stations": inc.stations, "agents": inc.agents, "likely_cause": inc.likely_cause, "evidence": inc.evidence[:6],
                         "recommendation": inc.recommendation.model_dump() if inc.recommendation else None})
         return {"incidents": out, "attention": central.attention_summary(self.state)}
 

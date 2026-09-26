@@ -67,6 +67,7 @@ class Plant:
                     self.bus.publish("events", events)
             actions.check_escalations(self.state)
             actions.release_resolved(self.state)
+            self.central.rerank(self.state)  # priorities move with time: aging, downtime, countdowns
             self.sim.account()
             self.state.advance(MINUTE)
             for listener in self.listeners:

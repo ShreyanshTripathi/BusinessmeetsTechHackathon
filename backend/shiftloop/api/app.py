@@ -22,6 +22,7 @@ from ..plant import Plant
 from ..vision.service import VisionService, detectors_from_env
 from ..whatif import what_if
 from .snapshot import incident_json, snapshot
+from .timeline import priority_timeline
 
 
 class SimCommand(BaseModel):
@@ -164,6 +165,10 @@ def create_app(plant: Plant | None = None, copilot: ChatCopilot | None = None, d
     @app.get("/api/models")
     async def models():
         return {"models": rt.plant.ml.cards()}
+
+    @app.get("/api/priority/timeline")
+    async def timeline():
+        return priority_timeline(rt.plant)
 
     @app.get("/api/oversight")
     async def oversight():

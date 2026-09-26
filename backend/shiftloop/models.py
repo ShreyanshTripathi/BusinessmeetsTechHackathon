@@ -195,6 +195,20 @@ class Recommendation(BaseModel):
     hard_rule: str | None = None  # set when a non-negotiable safety/quality rule produced the action
 
 
+class PriorityPoint(BaseModel):
+    """One step in an incident's priority over time, recorded when something meaningful changes."""
+
+    time: datetime
+    score: float
+    tier: int
+    visibility: Literal["active", "held"]
+    status: Literal["open", "accepted", "dismissed", "resolved"]
+    reason: str
+    cause: str  # event type behind the priority, e.g. "station_stopped"
+    change: Literal["opened", "promoted", "demoted", "tier_up", "tier_down", "cause", "accepted", "reopened",
+                    "resolved", "dismissed", "score"]
+
+
 class Incident(BaseModel):
     id: str
     title: str
@@ -208,7 +222,16 @@ class Incident(BaseModel):
     confidence: float = 1.0
     opened: datetime
     updated: datetime
-    score: float = 0.0
+    score: float = 0.0  # 0-100; each tier owns a 25-point band (see central/ranking.py)
+    tier: int = 3  # 0 safety, 1 line stoppage, 2 quality spill, 3 shift hygiene
+    priority_reason: str = ""
+    priority_cause: str = ""  # event type behind the priority, e.g. "station_stopped"
+    score_parts: dict[str, float] = Field(default_factory=dict)  # points behind the score
+    trend: Literal["rising", "falling", "steady"] = "steady"  # score over the last 10 simulated minutes
+    score_delta_10m: float = 0.0
+    waiting_min: int = 0  # minutes active without a decision (drives aging)
+    waiting_since: datetime | None = None
+    history: list[PriorityPoint] = Field(default_factory=list)  # priority changes, oldest first
     status: Literal["open", "accepted", "dismissed", "resolved"] = "open"
     visibility: Literal["active", "held"] = "held"
     likely_cause: str | None = None

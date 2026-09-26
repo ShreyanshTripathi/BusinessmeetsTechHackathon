@@ -40,6 +40,25 @@ template handover; everything else works the same.
 | `SHIFTLOOP_SUMMARY_MODEL` | `claude-haiku-4-5` | shift handover |
 | `SHIFTLOOP_OFFLINE=1` | unset | force offline mode |
 
+### Prioritization
+
+Every live incident is re-scored each simulated minute ([central/ranking.py](backend/shiftloop/central/ranking.py)).
+A strict tier comes first; the score (0–100) orders incidents within the tier, and each tier owns a 25-point band:
+
+| Tier | Band | What |
+|---|---|---|
+| 0 Safety | 75–100 | live hazards, fire warden gaps, anything under the safety-stop rule (pinned at 100) |
+| 1 Line stoppage | 50–75 | station stopped, starved, uncovered or below takt; tool failure or part run-out within 15 min |
+| 2 Quality spill | 25–50 | defect patterns, trainee without sign-off at a safety-critical station, near-miss reports |
+| 3 Shift hygiene | 0–25 | forecasts, cover planning, working-time and certification housekeeping |
+
+Within the band: severity (critical 60, high 40, medium 20, low 10) + impact (people exposed, share of line
+output lost, defect escape risk; 0–20) + ML risk × 20 + aging (+2 per minute active without a decision, max +20).
+At most three medium-or-higher incidents are *active*; an active one keeps its slot unless a same-tier challenger
+beats it by 5 points, so the list does not flicker. Each incident carries `tier`, `priority_reason`,
+`score_parts`, `trend` and `waiting_min`, and keeps a history of its priority; `GET /api/priority/timeline`
+returns it as bars, score points and markers for the timeline page.
+
 ### ML models (random forests)
 
 The backend loads the three random forests from `ml/models/` at startup (see [ml/README.md](ml/README.md)):

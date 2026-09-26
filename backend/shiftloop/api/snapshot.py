@@ -11,7 +11,8 @@ if TYPE_CHECKING:
 
 
 def incident_json(inc: Incident) -> dict:
-    return inc.model_dump(mode="json", exclude={"event_ids", "event_keys"})  # internal bookkeeping
+    # history is served by /api/priority/timeline to keep the per-minute snapshot small
+    return inc.model_dump(mode="json", exclude={"event_ids", "event_keys", "waiting_since", "history"})
 
 
 def _raise(alerts: dict[str, str], key: str, sev: Severity) -> None:

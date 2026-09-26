@@ -152,3 +152,14 @@ def test_websocket_sends_snapshot(client):
     with client.websocket_connect("/ws") as ws:
         msg = ws.receive_json()
         assert msg["type"] == "snapshot" and "stations" in msg["data"]
+
+
+def test_incidents_carry_priority_fields_and_timeline_is_ready_to_draw(client):
+    inc = snap(client)["incidents"]["active"][0]
+    assert {"tier", "score", "priority_reason", "trend", "score_delta_10m", "waiting_min"} <= set(inc)
+    assert "history" not in inc and "waiting_since" not in inc  # kept out of the per-minute snapshot
+    tl = client.get("/api/priority/timeline").json()
+    assert [t["label"] for t in tl["tiers"]] == ["Safety", "Line stoppage", "Quality spill", "Shift hygiene"]
+    first = next(i for i in tl["incidents"] if i["id"] == inc["id"])
+    assert first["segments"][-1]["to"] is None and first["segments"][-1]["visibility"] == "active"
+    assert first["points"] and first["markers"][0]["kind"] == "opened"
