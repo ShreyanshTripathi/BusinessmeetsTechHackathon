@@ -68,7 +68,7 @@ function DecidePage() {
 
 function SafetyNotice({ snap }: { snap: Snapshot }) {
   if (!snap.kpis.open_safety) return null;
-  return <div className="flex items-center gap-3 border-b-2 border-critical bg-critical/10 px-5 py-4 text-critical"><ShieldAlert className="h-7 w-7 shrink-0" /><strong className="text-xl">{snap.kpis.open_safety} open safety issue{snap.kpis.open_safety === 1 ? "" : "s"}</strong></div>;
+  return <div className="flex items-center gap-3 border-b-2 border-foreground bg-secondary px-5 py-4"><ShieldAlert className="h-7 w-7 shrink-0" /><strong className="text-xl">{snap.kpis.open_safety} open safety issue{snap.kpis.open_safety === 1 ? "" : "s"}</strong></div>;
 }
 
 function Collapsible({ label, children }: { label: string; children: ReactNode }) {
@@ -87,8 +87,8 @@ function Escalations({ snap }: { snap: Snapshot }) {
     <div className="mb-4 flex items-baseline justify-between gap-3"><h2 className="text-lg font-bold">Waiting on confirmation</h2><span className="text-xl font-bold tabular-nums">{waiting.length}</span></div>
     {waiting.length === 0 ? <p className="border-t border-border py-4 text-muted-foreground">No teams waiting to confirm.</p> : <div className="space-y-3">{waiting.map((e) => {
       const code = snap.notifications.find((n) => n.incident_id === e.incident_id && n.code)?.code;
-      return <div key={e.id} className="border-t-2 border-high bg-card p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-xl capitalize">{e.team}</strong><span className="font-bold text-high">{minutesBetween(e.time, snap.clock)} min waiting</span></div>
+      return <div key={e.id} className="border-t-2 border-foreground bg-card p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-xl capitalize">{e.team}</strong><span className="font-bold">{minutesBetween(e.time, snap.clock)} min waiting</span></div>
         {code && <Code code={code} className="text-sm" />}
         <p className="mt-1 leading-snug">{e.message}</p>
         <p className="mt-1 text-sm text-muted-foreground">Called {hhmm(e.time)}{e.reminders ? ` · ${e.reminders} reminder${e.reminders > 1 ? "s" : ""}` : ""}</p>
@@ -113,7 +113,7 @@ function LineStatus({ snap }: { snap: Snapshot }) {
     </div>
     <div className="mt-6 space-y-2 border-t border-border pt-4 text-sm">
       <div className="flex justify-between"><span>Open incidents</span><strong>{k.open_incidents}</strong></div>
-      {k.open_safety > 0 && <div className="flex justify-between text-critical"><span>Open safety issues</span><strong>{k.open_safety}</strong></div>}
+      {k.open_safety > 0 && <div className="flex justify-between font-semibold"><span>Open safety issues</span><strong>{k.open_safety}</strong></div>}
       {top.length > 0 && <p className="text-muted-foreground">Most downtime: {top.map(([s, m]) => `${s} ${m} min`).join(" · ")}</p>}
     </div>
     {impact.length > 0 && <Collapsible label="Saved by decisions this shift"><div className="space-y-2 text-sm">{impact.map(([key, value]) => <p key={key}>{key.replaceAll("_", " ")}: <strong>{value}</strong></p>)}</div></Collapsible>}

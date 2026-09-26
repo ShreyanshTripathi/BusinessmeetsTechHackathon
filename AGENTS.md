@@ -17,3 +17,4 @@
 - Never rank, score or compute business logic on the client; render backend order. Why: the backend owns decisions.
 - Time is plant time: use `src/lib/time.ts` (relative to `snapshot.clock`, no timezone conversion). Why: simulated clock.
 - Colour tokens `critical`/`high`/`medium` are for severity only. Why: calm-by-default design.
+- Keep the Decide page decision-first with an independent status rail and never infer that people are safe from a zero issue count. Why: supervisors need a trustworthy first glance.
