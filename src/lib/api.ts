@@ -13,12 +13,12 @@ async function req<T>(method: "GET" | "POST", path: string, body?: unknown, time
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(getApiBase() + path, {
-      method,
-      headers: method === "POST" ? { "content-type": "application/json" } : undefined,
-      body: method === "POST" ? JSON.stringify(body ?? {}) : undefined,
-      signal: ctrl.signal,
-    });
+    const init: RequestInit = { method, signal: ctrl.signal };
+    if (method === "POST") {
+      init.headers = { "content-type": "application/json" };
+      init.body = JSON.stringify(body ?? {});
+    }
+    const res = await fetch(getApiBase() + path, init);
     if (!res.ok) {
       let detail = `Request failed (${res.status})`;
       try { const j = await res.json(); if (j && typeof j.detail === "string") detail = j.detail; } catch { /* */ }

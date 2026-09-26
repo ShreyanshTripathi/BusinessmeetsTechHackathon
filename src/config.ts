@@ -15,7 +15,7 @@ export function resolveApiBase(): string {
   } catch {
     /* ignore */
   }
-  const env = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "";
+  const env = (import.meta.env['VITE_API_BASE_URL'] as string | undefined) ?? "";
   return env.replace(/\/+$/, "");
 }
 
@@ -32,7 +32,7 @@ export function setApiBase(url: string | null) {
   } catch {
     /* ignore */
   }
-  base = v || ((import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "").replace(/\/+$/, "");
+  base = v || ((import.meta.env['VITE_API_BASE_URL'] as string | undefined) ?? "").replace(/\/+$/, "");
 }
 
 export function getWsUrl(): string {

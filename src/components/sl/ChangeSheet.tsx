@@ -29,7 +29,7 @@ export function ChangeSheet({ incident, open, onOpenChange }: { incident: Incide
   const replace = async (i: number, wid: string) => {
     const w = workers.find((x) => x.id === wid);
     update(i, { worker: wid, worker_name: w?.name ?? wid, check: null, checking: true });
-    const station = slots[i].orig.to_station ?? incident.stations[0];
+    const station = slots[i]?.orig.to_station ?? incident.stations[0];
     if (!station) { update(i, { checking: false }); return; }
     try { const r = await api.whatif(wid, station); update(i, { check: r, checking: false }); }
     catch { update(i, { checking: false }); }
