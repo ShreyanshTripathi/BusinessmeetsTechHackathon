@@ -44,8 +44,8 @@ type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" 
 export function ActBtn({ variant = "outline", big, className, children, disabled, ...rest }: BtnProps) {
   const { demo } = useLive();
   const cls = cn(
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 font-display text-lg font-semibold tracking-wide transition-colors disabled:cursor-not-allowed disabled:opacity-45",
-    big && "min-h-14 px-6 text-xl",
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 font-sans text-base font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-45",
+    big && "min-h-14 px-6 text-lg",
     variant === "primary" && "bg-primary text-primary-foreground hover:bg-primary/85",
     variant === "danger" && "bg-critical text-critical-foreground hover:bg-critical/85",
     variant === "outline" && "border border-input bg-transparent hover:bg-accent",
@@ -72,8 +72,8 @@ export function Btn({ variant = "outline", big, className, children, ...rest }: 
     <button
       {...rest}
       className={cn(
-        "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 font-display text-lg font-semibold tracking-wide transition-colors disabled:opacity-45",
-        big && "min-h-14 px-6 text-xl",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 font-sans text-base font-semibold transition-colors disabled:opacity-45",
+        big && "min-h-14 px-6 text-lg",
         variant === "primary" && "bg-primary text-primary-foreground hover:bg-primary/85",
         variant === "danger" && "bg-critical text-critical-foreground hover:bg-critical/85",
         variant === "outline" && "border border-input hover:bg-accent",
