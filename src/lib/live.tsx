@@ -31,7 +31,9 @@ interface LiveCtx {
   testVoice: () => void;
 }
 
-const Ctx = createContext<LiveCtx | null>(null);
+// Keep one context instance across hot reloads so providers and consumers always match.
+const g = globalThis as unknown as { __shiftloopLiveCtx?: React.Context<LiveCtx | null> };
+const Ctx = g.__shiftloopLiveCtx ?? (g.__shiftloopLiveCtx = createContext<LiveCtx | null>(null));
 export const useLive = () => {
   const c = useContext(Ctx);
   if (!c) throw new Error("useLive outside provider");
