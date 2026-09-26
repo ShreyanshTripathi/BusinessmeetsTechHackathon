@@ -118,8 +118,7 @@ def all_clear(state: FactoryState) -> dict:
     if em is None:
         raise ValueError("no emergency in progress")
     minutes = int((state.now - em.started).total_seconds() // 60)
-    takt = next(iter(state.layout.stations.values())).takt_s
-    cars = round(minutes * 60 / takt)
+    cars = round(minutes * 60 / state.layout.takt_s)
     people = [w for w in state.present() if w.zone == em.zone]
     steps = [
         f"Fire wardens confirm zone {em.zone} is safe and exits are clear",
@@ -137,5 +136,5 @@ def all_clear(state: FactoryState) -> dict:
         recommended=f"All clear for zone {em.zone} and restart", decision="accept", applied=steps,
         agents=["safety"]))
     state.emergency = None
-    state.notify("info", f"All clear in zone {em.zone}", f"Restart plan: recover {cars} cars")
+    state.notify("info", f"All clear in zone {em.zone}", f"Restart plan: recover {cars} cars", em.incident_id)
     return {"zone": em.zone, "duration_min": minutes, "cars_to_recover": cars, "steps": steps}

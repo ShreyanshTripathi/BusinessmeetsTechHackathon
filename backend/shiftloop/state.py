@@ -1,6 +1,7 @@
 """The shared picture of the section: layout, people, live readings and everything the agents produced."""
 from __future__ import annotations
 
+import re
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -150,7 +151,28 @@ class FactoryState:
             self.apply_staffing(reading)
 
     def notify(self, level: str, title: str, body: str = "", incident_id: str | None = None) -> Notification:
+        inc = self.incidents.get(incident_id) if incident_id else None
         n = Notification(id=self.next_id("ntf"), time=self.now, level=level, title=title, body=body,
-                         incident_id=incident_id)
+                         incident_id=incident_id, code=alert_code(inc) if inc else None,
+                         spoken=spoken_phrase(title, body))
         self.notifications.append(n)
         return n
+
+
+CATEGORY_LETTER = {"safety": "S", "quality": "Q", "production": "P", "staffing": "W"}  # W: workforce
+
+
+def alert_code(inc: Incident) -> str:
+    """ "S-C18": safety incident in zone C at S18; zone-wide incidents drop the station ("S-C")."""
+    station = inc.stations[0].removeprefix("S") if inc.stations else ""
+    return f"{CATEGORY_LETTER[inc.category]}-{inc.zone}{station}"
+
+
+def spoken_phrase(title: str, body: str = "") -> str:
+    """Title and body as one sentence pair for text-to-speech: "S18" reads as "station 18", "+" as "and"."""
+    def sentence(text: str) -> str:
+        text = re.sub(r"\bS(\d{2})\b", lambda m: f"station {int(m[1])}", text.replace(" + ", " and "))
+        text = re.sub(r"\b(\d+) min\b", r"\1 minutes", text).rstrip(".")
+        return text[0].upper() + text[1:] + "."
+
+    return " ".join(sentence(p) for p in [title] + ([body] if body and body != title else []))

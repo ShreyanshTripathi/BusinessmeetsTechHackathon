@@ -6,8 +6,7 @@ from .state import FactoryState
 
 
 def kpis(state: FactoryState, central: CentralIntelligence) -> dict:
-    takt = next(iter(state.layout.stations.values())).takt_s
-    plan = round(state.shift_elapsed_h * 3600 / takt)
+    plan = round(state.shift_elapsed_h * 3600 / state.layout.takt_s)
     built = int(state.cars_built)
     open_ = central.open_incidents(state)
     downtime = dict(sorted(((k, round(v, 1)) for k, v in state.downtime_min.items() if v > 0),
