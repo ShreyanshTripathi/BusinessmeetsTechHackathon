@@ -4,7 +4,9 @@ Tesla Giga Berlin hackathon. Theme: *Sustainably increase efficiency through AI.
 
 **Live app:** [nerv-tech.lovable.app](https://nerv-tech.lovable.app/)
 
-The code still uses the working name `shiftloop` (Python package, `SHIFTLOOP_*` settings, service name).
+The code still uses the working name `shiftloop` (Python package, `SHIFTLOOP_*` settings, service name). The
+dashboard frontend was rebuilt in [Lovable](https://lovable.dev) and lives on the `frontend` branch — see
+[Layout](#layout) below for how its files map onto the original design.
 
 Three specialised agents (**Staffing**, **General Assembly**, **Fire & Safety**) watch their part of the line.
 A **central intelligence** merges their findings into incidents, ranks them (safety first), matches people to
@@ -45,14 +47,22 @@ cd backend
 uv sync
 uv run shiftloop            # or: uv run uvicorn shiftloop.api.app:make_default --factory --port 8000
 
-# 2. frontend (http://localhost:5173)
+# 2. frontend
 cd frontend
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173. The demo shift starts at 06:00 and runs at 2 simulated minutes per second; use
-▶ / ❚❚, **+15 min** and the speed selector in the top bar. **Reset** restarts the scripted shift.
+The dev server prints its local URL on start. By default the frontend talks to the **hosted** backend
+(`https://shiftloop.onrender.com`, baked in as `DEFAULT_API`) — point it at your local backend instead by
+opening the printed URL with `?api=http://127.0.0.1:8000`, or by setting `VITE_API_BASE_URL` (see below).
+
+If nothing is reachable yet, the dashboard doesn't sit blank: it opens instantly on bundled mock snapshots
+(`src/mocks/`) with a **DEMO DATA** badge, and switches over automatically the moment a real backend answers.
+Set `DEMO_ENABLED = false` in `src/config.ts` (or delete `src/mocks/`) once you don't want that fallback.
+
+The demo shift starts at 06:00 and runs at 2 simulated minutes per second. All shift timing is driven by the
+backend's simulated clock (`snapshot.clock`) — the frontend renders it, it doesn't compute it.
 
 ### Claude
 
@@ -127,12 +137,16 @@ The dashboard is hosted separately.
    try `/api/health`.
 
 **Dashboard (anywhere that hosts static sites)**
-Build it with the backend's URL, then upload `frontend/dist/`:
+Build it with the backend's URL, then upload the build output:
 ```bash
 cd frontend
-VITE_API_URL=https://shiftloop.onrender.com npm run build
+VITE_API_BASE_URL=https://shiftloop.onrender.com npm run build
 ```
-Without `VITE_API_URL` the dashboard talks to its own origin (local dev with the Vite proxy).
+The env var is `VITE_API_BASE_URL` (not `VITE_API_URL` — that was the old frontend's name; the rebuilt
+dashboard renamed it, so update any deploy scripts or Render dashboard env settings that still reference the
+old one). If you skip it entirely, the dashboard already defaults to the hosted `shiftloop.onrender.com`
+backend (`DEFAULT_API` in `src/config.ts`), so this variable is now mainly for pointing a build at a *different*
+backend (staging, local, etc).
 
 Things to know:
 - **One backend instance only.** The factory state lives in memory; each deploy or restart starts the shift again.
@@ -160,11 +174,10 @@ proposal you confirm), *"Summarise the shift for the handover"*.
 
 ```bash
 cd backend && uv run pytest        # agents, central, actions, simulator, API, LLM loop (fake client), vision
-cd frontend && npm test            # components against real snapshot fixtures
 ```
 
-Frontend fixtures in `frontend/src/test/fixtures/` are generated from the real backend; regenerate them if the
-snapshot format changes.
+The rebuilt frontend doesn't have a `test` script wired up yet (no test runner in `package.json`), so the old
+`cd frontend && npm test` instruction no longer applies. `npm run lint` (ESLint) is available in the meantime.
 
 ## Architecture
 
@@ -194,15 +207,25 @@ backend/shiftloop/
   actions.py                        decisions, escalations + reminders, all clear, impact accounting
   matching.py, whatif.py, kpis.py, oversight.py, stats.py
   simulator/shift.py                synthetic signals + scripted demo shift
-  plant.py                          simulator → bus → agents → central
+  plant.py                          simulator to bus to agents to central
   llm/                              Claude chat tool loop, tools, handover, offline fallback
   vision/service.py                 detector slots (team QC model, YOLO fire/PPE)
   api/                              FastAPI app + snapshot
 frontend/src/
-  App.tsx, api.ts, useSnapshot.ts   shell, REST client, live WebSocket
-  components/                       PriorityInbox, FloorMap, Notifications, Escalations, ChatPanel,
-                                    EmergencyView, StaffingBoard, OversightView, HandoverView, TopBar
+  config.ts, types.ts               API base resolution (+ demo-mode switch), backend contract mirror
+  lib/api.ts, lib/live.tsx          REST client; live state provider - WS + polling fallback + demo mocks
+  lib/time.ts, lib/voice.ts         plant-time formatting (relative to snapshot.clock), voice alert reading
+  routes/                           file-based pages - index (Now/decisions), line, alerts, people,
+                                     oversight, handover, settings
+  components/sl/                    AppShell (shell/nav), DecisionCard, ProposalCard, ChangeSheet,
+                                     Copilot (chat), Emergency (emergency mode), ReasonDialog, bits
+  components/ui/                    shared shadcn/ui primitives
 ```
+
+Frontend rules the Lovable build follows: never compute business logic client-side (the backend owns decisions,
+the frontend renders its order as-is); `types.ts` mirrors the backend contract exactly, no renamed/added fields;
+all live state flows through `LiveProvider`. See `AGENTS.md` and `.lovable/plan/` in the frontend for the fuller
+rationale and build history behind these choices.
 
 ## Assumptions to replace with plant data
 
