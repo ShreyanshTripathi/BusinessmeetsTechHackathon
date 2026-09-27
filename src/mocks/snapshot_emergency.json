@@ -1,0 +1,902 @@
+{
+ "clock": "2026-10-01T10:20:00",
+ "sim": {
+  "running": false,
+  "speed": 2.0,
+  "scenario": "demo",
+  "vision": {
+   "quality": "no model loaded",
+   "fire": "no model loaded",
+   "ppe": "no model loaded",
+   "exit": "no model loaded"
+  }
+ },
+ "mode": "offline",
+ "stations": [
+  {
+   "id": "S01",
+   "zone": "A",
+   "name": "Body framing",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W001",
+    "name": "Anna Schmidt",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S02",
+   "zone": "A",
+   "name": "Door fit",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W002",
+    "name": "Lukas Müller",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S03",
+   "zone": "A",
+   "name": "Roof weld",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W003",
+    "name": "Marta Nowak",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S04",
+   "zone": "A",
+   "name": "Underbody seal",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W004",
+    "name": "Jonas Becker",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S05",
+   "zone": "A",
+   "name": "Paint check",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W005",
+    "name": "Sofia Rossi",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S06",
+   "zone": "A",
+   "name": "Wire harness A",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W006",
+    "name": "Piotr Zielinski",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S07",
+   "zone": "B",
+   "name": "Wire harness B",
+   "status": "slowed",
+   "safety_critical": false,
+   "operator": {
+    "id": "W007",
+    "name": "Lea Fischer",
+    "level": 2
+   },
+   "cycle_time_s": 72.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S08",
+   "zone": "B",
+   "name": "Dash install",
+   "status": "slowed",
+   "safety_critical": false,
+   "operator": {
+    "id": "W008",
+    "name": "Tomasz Wójcik",
+    "level": 2
+   },
+   "cycle_time_s": 72.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S09",
+   "zone": "B",
+   "name": "Seat install",
+   "status": "stopped",
+   "safety_critical": false,
+   "operator": {
+    "id": "W009",
+    "name": "Mia Wagner",
+    "level": 1
+   },
+   "cycle_time_s": 72.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 6,
+   "alert": "high"
+  },
+  {
+   "id": "S10",
+   "zone": "B",
+   "name": "Glass fit",
+   "status": "slowed",
+   "safety_critical": false,
+   "operator": {
+    "id": "W010",
+    "name": "Felix Braun",
+    "level": 2
+   },
+   "cycle_time_s": 72.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S11",
+   "zone": "B",
+   "name": "Headliner",
+   "status": "slowed",
+   "safety_critical": false,
+   "operator": {
+    "id": "W011",
+    "name": "Hannah Koch",
+    "level": 2
+   },
+   "cycle_time_s": 72.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S12",
+   "zone": "B",
+   "name": "Brake lines",
+   "status": "slowed",
+   "safety_critical": false,
+   "operator": {
+    "id": "W017",
+    "name": "Ben Schulz",
+    "level": 2
+   },
+   "cycle_time_s": 72.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S13",
+   "zone": "C",
+   "name": "Wheel prep",
+   "status": "halted",
+   "safety_critical": false,
+   "operator": {
+    "id": "W013",
+    "name": "Noah Richter",
+    "level": 2
+   },
+   "cycle_time_s": 0.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S14",
+   "zone": "C",
+   "name": "Suspension",
+   "status": "halted",
+   "safety_critical": false,
+   "operator": {
+    "id": "W014",
+    "name": "Emma Klein",
+    "level": 2
+   },
+   "cycle_time_s": 0.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S15",
+   "zone": "C",
+   "name": "Drive unit",
+   "status": "halted",
+   "safety_critical": false,
+   "operator": {
+    "id": "W015",
+    "name": "Jan Kowalski",
+    "level": 2
+   },
+   "cycle_time_s": 0.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S16",
+   "zone": "C",
+   "name": "Cooling loop",
+   "status": "halted",
+   "safety_critical": false,
+   "operator": {
+    "id": "W016",
+    "name": "Clara Hoffmann",
+    "level": 2
+   },
+   "cycle_time_s": 0.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S17",
+   "zone": "C",
+   "name": "HV cabling",
+   "status": "halted",
+   "safety_critical": true,
+   "operator": {
+    "id": "W017",
+    "name": "Ben Schulz",
+    "level": 2
+   },
+   "cycle_time_s": 0.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S18",
+   "zone": "C",
+   "name": "Battery marriage",
+   "status": "halted",
+   "safety_critical": true,
+   "operator": {
+    "id": "W018",
+    "name": "Elif Kaya",
+    "level": 3
+   },
+   "cycle_time_s": 0.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": "critical"
+  },
+  {
+   "id": "S19",
+   "zone": "D",
+   "name": "Bolt torque",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W019",
+    "name": "Karim Haddad",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S20",
+   "zone": "D",
+   "name": "Trim close",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W020",
+    "name": "Julia Wagner",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S21",
+   "zone": "D",
+   "name": "Fluids fill",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W021",
+    "name": "Paul Neumann",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S22",
+   "zone": "D",
+   "name": "Wheel mount",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W022",
+    "name": "Lina Wolf",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S23",
+   "zone": "D",
+   "name": "Alignment",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W023",
+    "name": "David Krüger",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  },
+  {
+   "id": "S24",
+   "zone": "D",
+   "name": "Final check",
+   "status": "running",
+   "safety_critical": false,
+   "operator": {
+    "id": "W024",
+    "name": "Sara Lange",
+    "level": 2
+   },
+   "cycle_time_s": 57.0,
+   "takt_s": 60.0,
+   "downtime_min": 0,
+   "defects": 0,
+   "alert": null
+  }
+ ],
+ "zones": [
+  {
+   "id": "A",
+   "name": "Zone A",
+   "people": 9,
+   "fire_wardens": [
+    "Anna Schmidt"
+   ],
+   "first_aiders": [
+    "Lea Fischer"
+   ],
+   "exits": [
+    "EXIT-A1",
+    "EXIT-A2"
+   ],
+   "assembly_point": "AP-A",
+   "sensors": [
+    {
+     "id": "SMK-A",
+     "kind": "smoke",
+     "unit": "%obs/m",
+     "warn": 2.0,
+     "crit": 4.0,
+     "station": null,
+     "value": 0.3
+    },
+    {
+     "id": "HT-A",
+     "kind": "heat",
+     "unit": "°C",
+     "warn": 40.0,
+     "crit": 55.0,
+     "station": null,
+     "value": 26.1
+    }
+   ],
+   "alert": null
+  },
+  {
+   "id": "B",
+   "name": "Zone B",
+   "people": 9,
+   "fire_wardens": [
+    "Noah Richter"
+   ],
+   "first_aiders": [
+    "Hannah Koch"
+   ],
+   "exits": [
+    "EXIT-B1",
+    "EXIT-B2"
+   ],
+   "assembly_point": "AP-B",
+   "sensors": [
+    {
+     "id": "SMK-B",
+     "kind": "smoke",
+     "unit": "%obs/m",
+     "warn": 2.0,
+     "crit": 4.0,
+     "station": null,
+     "value": 0.3
+    },
+    {
+     "id": "HT-B",
+     "kind": "heat",
+     "unit": "°C",
+     "warn": 40.0,
+     "crit": 55.0,
+     "station": null,
+     "value": 26.1
+    }
+   ],
+   "alert": "high"
+  },
+  {
+   "id": "C",
+   "name": "Zone C",
+   "people": 9,
+   "fire_wardens": [
+    "Karim Haddad"
+   ],
+   "first_aiders": [
+    "Julia Wagner"
+   ],
+   "exits": [
+    "EXIT-C1",
+    "EXIT-C2"
+   ],
+   "assembly_point": "AP-C",
+   "sensors": [
+    {
+     "id": "SMK-C",
+     "kind": "smoke",
+     "unit": "%obs/m",
+     "warn": 2.0,
+     "crit": 4.0,
+     "station": null,
+     "value": 2.52
+    },
+    {
+     "id": "BT-S18",
+     "kind": "battery_temp",
+     "unit": "°C",
+     "warn": 45.0,
+     "crit": 60.0,
+     "station": "S18",
+     "value": 46.93
+    }
+   ],
+   "alert": "critical"
+  },
+  {
+   "id": "D",
+   "name": "Zone D",
+   "people": 8,
+   "fire_wardens": [
+    "Paul Neumann"
+   ],
+   "first_aiders": [],
+   "exits": [
+    "EXIT-D1",
+    "EXIT-D2"
+   ],
+   "assembly_point": "AP-D",
+   "sensors": [
+    {
+     "id": "SMK-D",
+     "kind": "smoke",
+     "unit": "%obs/m",
+     "warn": 2.0,
+     "crit": 4.0,
+     "station": null,
+     "value": 0.3
+    },
+    {
+     "id": "HT-D",
+     "kind": "heat",
+     "unit": "°C",
+     "warn": 40.0,
+     "crit": 55.0,
+     "station": null,
+     "value": 26.1
+    }
+   ],
+   "alert": null
+  }
+ ],
+ "incidents": {
+  "active": [
+   {
+    "id": "inc_0010",
+    "title": "Fire confirmed in zone C + battery overheating",
+    "zone": "C",
+    "stations": [
+     "S18"
+    ],
+    "agents": [
+     "safety"
+    ],
+    "severity": "critical",
+    "category": "safety",
+    "confidence": 0.9,
+    "opened": "2026-10-01T10:15:00",
+    "updated": "2026-10-01T10:16:00",
+    "score": 1109.0,
+    "status": "open",
+    "visibility": "active",
+    "likely_cause": "Battery pack overheating at S18 is the likely source of the smoke",
+    "evidence": [
+     "BT-S18: battery pack at 41.0°C (critical at 60°C)",
+     "temperature rising 2.5°C/min",
+     "CAM-FIRE-C: smoke detected (72%)",
+     "SMK-C: 2.6 %obs/m (alarm at 4.0)",
+     "9 people in zone C"
+    ],
+    "recommendation": {
+     "action": "emergency",
+     "scope": "zone",
+     "target": "C",
+     "summary": "Fire in zone C: stop, evacuate, count people",
+     "steps": [
+      "STOP zone C now (safety rule)",
+      "9 people in zone C: evacuate via EXIT-C1, EXIT-C2 to AP-C",
+      "Fire warden(s) on site: Karim Haddad",
+      "Slow zone B (upstream) so cars do not pile up",
+      "Zone D (downstream) runs on buffer, then waits"
+     ],
+     "assignments": [],
+     "escalations": [
+      "plant fire brigade",
+      "EHS"
+     ],
+     "hard_rule": "safety_stop"
+    }
+   },
+   {
+    "id": "inc_0009",
+    "title": "Defects at S09 + trainee on station",
+    "zone": "B",
+    "stations": [
+     "S09"
+    ],
+    "agents": [
+     "assembly",
+     "staffing"
+    ],
+    "severity": "high",
+    "category": "quality",
+    "confidence": 0.55,
+    "opened": "2026-10-01T09:40:00",
+    "updated": "2026-10-01T09:44:00",
+    "score": 610.0,
+    "status": "open",
+    "visibility": "active",
+    "likely_cause": "Method, not machine: trainee at S09",
+    "evidence": [
+     "6 torque defects in 20 min at S09",
+     "Operator Mia Wagner level 1 (trainee)",
+     "Tool S09 within spec"
+    ],
+    "recommendation": {
+     "action": "stop",
+     "scope": "station",
+     "target": "S09",
+     "summary": "Stop S09, pair trainee with a trainer",
+     "steps": [
+      "Stop S09 (quality rule)",
+      "Pair Mia Wagner with trainer Clara Hoffmann",
+      "Re-check last 6 cars"
+     ],
+     "assignments": [
+      {
+       "worker": "W016",
+       "worker_name": "Clara Hoffmann",
+       "kind": "task",
+       "to_station": "S09",
+       "to_zone": "B",
+       "task": "Buddy pairing at S09",
+       "reason": "Trainer level 3 at S09"
+      }
+     ],
+     "escalations": [
+      "quality"
+     ],
+     "hard_rule": "quality_spread"
+    }
+   }
+  ],
+  "held": [
+   {
+    "id": "inc_0007",
+    "title": "Minor cycle drift at S04",
+    "zone": "A",
+    "stations": [
+     "S04"
+    ],
+    "agents": [
+     "assembly"
+    ],
+    "severity": "medium",
+    "category": "production",
+    "confidence": 0.7,
+    "opened": "2026-10-01T09:40:00",
+    "updated": "2026-10-01T09:44:00",
+    "score": 610.0,
+    "status": "open",
+    "visibility": "held",
+    "likely_cause": null,
+    "evidence": [
+     "Cycle 61 s vs takt 60 s"
+    ],
+    "recommendation": null
+   }
+  ],
+  "in_progress": [
+   {
+    "id": "inc_0008",
+    "title": "Tool wear predicted at S12",
+    "zone": "B",
+    "stations": [
+     "S12"
+    ],
+    "agents": [
+     "assembly"
+    ],
+    "severity": "medium",
+    "category": "production",
+    "confidence": 0.7,
+    "opened": "2026-10-01T09:40:00",
+    "updated": "2026-10-01T09:44:00",
+    "score": 610.0,
+    "status": "accepted",
+    "visibility": "active",
+    "likely_cause": null,
+    "evidence": [
+     "Cycle 61 s vs takt 60 s"
+    ],
+    "recommendation": null
+   }
+  ]
+ },
+ "notifications": [
+  {
+   "id": "ntf_0014",
+   "time": "2026-10-01T10:16:00",
+   "level": "critical",
+   "title": "Fire confirmed in zone C",
+   "body": "Evacuate zone C via EXIT-C1, EXIT-C2 to AP-C.",
+   "incident_id": "inc_0010",
+   "acknowledged": false,
+   "code": "S-C18",
+   "spoken": "Red alert. Safety. Zone C, station 18. Evacuate zone."
+  },
+  {
+   "id": "ntf_0001",
+   "time": "2026-10-01T06:01:00",
+   "level": "warning",
+   "title": "S12 uncovered",
+   "body": "No operator at S12 after absences.",
+   "incident_id": "inc_0001",
+   "acknowledged": false,
+   "code": "P-B12",
+   "spoken": "Warning. Staffing. Zone B, station 12. Station uncovered."
+  }
+ ],
+ "escalations": [
+  {
+   "id": "esc_0001",
+   "time": "2026-10-01T09:25:00",
+   "team": "maintenance",
+   "incident_id": "inc_0008",
+   "message": "Tool failure predicted at S12",
+   "acknowledged_at": null,
+   "reminders": 1,
+   "last_reminder": "2026-10-01T09:35:00"
+  },
+  {
+   "id": "esc_0002",
+   "time": "2026-10-01T10:16:00",
+   "team": "plant fire brigade",
+   "incident_id": "inc_0010",
+   "message": "Fire in zone C",
+   "acknowledged_at": null,
+   "reminders": 0,
+   "last_reminder": null
+  }
+ ],
+ "proposals": [
+  {
+   "id": "prp_0001",
+   "kind": "assign",
+   "description": "Assign Lina Wolf to S22 to cover part shortage handling",
+   "params": {
+    "worker": "W022",
+    "station": "S22"
+   },
+   "status": "pending"
+  }
+ ],
+ "emergency": {
+  "zone": "C",
+  "started": "2026-10-01T10:16:00",
+  "reason": "Fire confirmed + battery overheating at S18",
+  "incident_id": "inc_0010",
+  "people": [
+   {
+    "id": "W013",
+    "name": "Noah Richter",
+    "station": "S13",
+    "fire_warden": false,
+    "accounted": true
+   },
+   {
+    "id": "W014",
+    "name": "Emma Klein",
+    "station": "S14",
+    "fire_warden": false,
+    "accounted": true
+   },
+   {
+    "id": "W015",
+    "name": "Jan Kowalski",
+    "station": "S15",
+    "fire_warden": false,
+    "accounted": true
+   },
+   {
+    "id": "W016",
+    "name": "Clara Hoffmann",
+    "station": "S16",
+    "fire_warden": false,
+    "accounted": true
+   },
+   {
+    "id": "W017",
+    "name": "Ben Schulz",
+    "station": "S17",
+    "fire_warden": false,
+    "accounted": true
+   },
+   {
+    "id": "W018",
+    "name": "Elif Kaya",
+    "station": "S18",
+    "fire_warden": false,
+    "accounted": false
+   },
+   {
+    "id": "W019",
+    "name": "Karim Haddad",
+    "station": null,
+    "fire_warden": true,
+    "accounted": true
+   },
+   {
+    "id": "W020",
+    "name": "Julia Wagner",
+    "station": null,
+    "fire_warden": false,
+    "accounted": true
+   },
+   {
+    "id": "W034",
+    "name": "Omar Said",
+    "station": null,
+    "fire_warden": false,
+    "accounted": false
+   }
+  ],
+  "accounted": 7,
+  "exits": [
+   "EXIT-C1",
+   "EXIT-C2"
+  ],
+  "assembly_point": "AP-C",
+  "wardens": [
+   "Karim Haddad"
+  ],
+  "minutes": 4
+ },
+ "kpis": {
+  "time": "2026-10-01T10:20:00",
+  "cars_built": 255,
+  "plan": 260,
+  "output_pct": 98,
+  "downtime_min": {
+   "Zone C emergency": 4.0,
+   "S12": 2.0
+  },
+  "downtime_total_min": 6.0,
+  "defects": 15,
+  "open_safety": 1,
+  "open_incidents": 2,
+  "impact": {
+   "downtime_avoided_min": 28.0,
+   "energy_saved_kwh": 42.0
+  }
+ },
+ "attention": {
+  "signals": 18985,
+  "events": 27,
+  "incidents": 10,
+  "active": 2,
+  "held_back": 18983
+ },
+ "expert_queue": [
+  {
+   "id": "exq_0001",
+   "time": "2026-10-01T09:52:00",
+   "station": "S09",
+   "evidence": [
+    "CAM-Q-B: possible scratch (48%)"
+   ],
+   "confidence": 0.48
+  }
+ ]
+}

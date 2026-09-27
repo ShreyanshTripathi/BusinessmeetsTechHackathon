@@ -1,3 +1,4 @@
+
 .DS_Store
 backend/.venv/
 backend/**/__pycache__/
@@ -8,3 +9,36 @@ ml/.venv/
 ml/__pycache__/
 frontend/
 frontend~80f4fef125dfb9fa3f0c1b99a25a01a675cdd3b1/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+.output
+.vinxi
+.tanstack/**
+.nitro
+*.local
+
+# Wrangler / Cloudflare
+.wrangler/
+.dev.vars
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
